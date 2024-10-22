@@ -991,6 +991,7 @@ struct SaveBlock1
     /*0x31*/ //u8 padding1;
     /*0x32*/ u16 mapLayoutId;
     /*0x34*/ u16 mapView[0x100];
+    /*0x234*/ u16 farmMap[0x100];
     /*0x234*/ u8 playerPartyCount;
     /*0x235*/ //u8 padding2[3];
     /*0x238*/ struct Pokemon playerParty[PARTY_SIZE];

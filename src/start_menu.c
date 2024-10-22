@@ -8,6 +8,7 @@
 #include "event_object_movement.h"
 #include "event_object_lock.h"
 #include "event_scripts.h"
+#include "farm.h"
 #include "fieldmap.h"
 #include "field_effect.h"
 #include "field_player_avatar.h"
@@ -924,6 +925,8 @@ static bool8 BattlePyramidRetireCallback(void)
 static void InitSave(void)
 {
     SaveMapView();
+    if (gMapHeader.mapLayoutId == LAYOUT_EMERALD_VALLEY_FARM)
+        SaveFarmMap();
     sSaveDialogCallback = SaveConfirmSaveCallback;
     sSavingComplete = FALSE;
 }

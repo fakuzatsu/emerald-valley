@@ -1,6 +1,7 @@
 #include "global.h"
 #include "agb_flash.h"
 #include "gba/flash_internal.h"
+#include "farm.h"
 #include "fieldmap.h"
 #include "save.h"
 #include "task.h"
@@ -1002,6 +1003,8 @@ void Task_LinkFullSave(u8 taskId)
         {
             if (!tInBattleTower)
                 SaveMapView();
+            if (gMapHeader.mapLayoutId == LAYOUT_EMERALD_VALLEY_FARM)
+                SaveFarmMap();
             tState = 3;
         }
         break;

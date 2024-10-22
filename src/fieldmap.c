@@ -1,6 +1,7 @@
 #include "global.h"
 #include "battle_pyramid.h"
 #include "bg.h"
+#include "farm.h"
 #include "fieldmap.h"
 #include "fldeff.h"
 #include "fldeff_misc.h"
@@ -659,6 +660,8 @@ bool8 CameraMove(int x, int y)
     else
     {
         SaveMapView();
+        if (gMapHeader.mapLayoutId == LAYOUT_EMERALD_VALLEY_FARM)
+            SaveFarmMap();
         ClearMirageTowerPulseBlendEffect();
         old_x = gSaveBlock1Ptr->pos.x;
         old_y = gSaveBlock1Ptr->pos.y;
