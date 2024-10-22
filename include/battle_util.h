@@ -20,6 +20,23 @@
 #define MOVE_LIMITATION_PLACEHOLDER             (1 << 15)
 #define MOVE_LIMITATIONS_ALL                    0xFFFF
 
+enum MoveBlocked
+{
+    MOVE_BLOCKED_BY_NO_ABILITY,
+    MOVE_BLOCKED_BY_SOUNDPROOF_OR_BULLETPROOF,
+    MOVE_BLOCKED_BY_DAZZLING,
+    MOVE_BLOCKED_BY_PARTNER_DAZZLING,
+    MOVE_BLOCKED_BY_GOOD_AS_GOLD,
+};
+
+enum MoveAbsorbed
+{
+    MOVE_ABSORBED_BY_NO_ABILITY,
+    MOVE_ABSORBED_BY_DRAIN_HP_ABILITY,
+    MOVE_ABSORBED_BY_STAT_INCREASE_ABILITY,
+    MOVE_ABSORBED_BY_BOOST_FLASH_FIRE,
+};
+
 enum {
     ABILITYEFFECT_ON_SWITCHIN,
     ABILITYEFFECT_ENDTURN,
@@ -161,6 +178,9 @@ void SetAtkCancellerForCalledMove(void);
 u8 AtkCanceller_UnableToUseMove2(void);
 bool32 HasNoMonsToSwitch(u32 battler, u8 r1, u8 r2);
 bool32 TryChangeBattleWeather(u32 battler, u32 weatherEnumId, bool32 viaAbility);
+u32 CanAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 move, u32 abilityDef);
+u32 CanPartnerAbilityBlockMove(u32 battlerAtk, u32 battlerDef, u32 move, u32 abilityDef);
+u32 CanAbilityAbsorbMove(u32 battlerAtk, u32 battlerDef, u32 abilityDef, u32 move, u32 moveType);
 u32 AbilityBattleEffects(u32 caseID, u32 battler, u32 ability, u32 special, u32 moveArg);
 bool32 TryPrimalReversion(u32 battler);
 bool32 IsNeutralizingGasOnField(void);
@@ -279,5 +299,6 @@ u8 GetBattlerType(u32 battler, u8 typeIndex, bool32 ignoreTera);
 bool8 CanMonParticipateInSkyBattle(struct Pokemon *mon);
 bool8 IsMonBannedFromSkyBattles(u16 species);
 void RemoveBattlerType(u32 battler, u8 type);
+u32 GetMoveType(u32 move);
 
 #endif // GUARD_BATTLE_UTIL_H
