@@ -46,6 +46,7 @@
 #include "window.h"
 #include "union_room.h"
 #include "constants/battle_frontier.h"
+#include "constants/layouts.h"
 #include "constants/rgb.h"
 #include "constants/songs.h"
 

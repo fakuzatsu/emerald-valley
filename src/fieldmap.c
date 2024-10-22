@@ -16,6 +16,7 @@
 #include "trainer_hill.h"
 #include "tv.h"
 #include "constants/rgb.h"
+#include "constants/layouts.h"
 #include "constants/metatile_behaviors.h"
 #include "wild_encounter.h"
 
@@ -70,6 +71,8 @@ void InitMap(void)
 {
     InitMapLayoutData(&gMapHeader);
     SetOccupiedSecretBaseEntranceMetatiles(gMapHeader.events);
+    if (gMapHeader.mapLayoutId == LAYOUT_EMERALD_VALLEY_FARM && !FarmMapViewIsEmpty())
+        LoadFarmMap();
     RunOnLoadMapScript();
 }
 
@@ -78,7 +81,10 @@ void InitMapFromSavedGame(void)
     InitMapLayoutData(&gMapHeader);
     InitSecretBaseAppearance(FALSE);
     SetOccupiedSecretBaseEntranceMetatiles(gMapHeader.events);
-    LoadSavedMapView();
+    if (gMapHeader.mapLayoutId == LAYOUT_EMERALD_VALLEY_FARM && !FarmMapViewIsEmpty())
+        LoadFarmMap();
+    else
+        LoadSavedMapView();
     RunOnLoadMapScript();
     UpdateTVScreensOnMap(gBackupMapLayout.width, gBackupMapLayout.height);
 }

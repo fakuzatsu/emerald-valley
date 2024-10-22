@@ -925,8 +925,6 @@ if (I_VS_SEEKER_CHARGING != 0)
     gChainFishingDexNavStreak = 0;
     if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
         InitBattlePyramidMap(FALSE);
-    else if (gMapHeader.mapLayoutId == LAYOUT_EMERALD_VALLEY_FARM)
-        LoadFarmMap();
     else if (InTrainerHill())
         InitTrainerHillMap();
     else
@@ -1803,8 +1801,6 @@ void CB2_ContinueSavedGame(void)
     UpdateMiscOverworldStates();
     if (gMapHeader.mapLayoutId == LAYOUT_BATTLE_FRONTIER_BATTLE_PYRAMID_FLOOR)
         InitBattlePyramidMap(TRUE);
-    else if (gMapHeader.mapLayoutId == LAYOUT_EMERALD_VALLEY_FARM)
-        LoadFarmMap();
     else if (trainerHillMapId != 0)
         InitTrainerHillMap();
     else
