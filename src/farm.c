@@ -6,8 +6,8 @@
 void SaveFarmMap(void)
 {
     int i, j;
-    int width = gBackupMapLayout.width - (2 * MAP_OFFSET);
-    int height = gBackupMapLayout.height - (2 * MAP_OFFSET);
+    int width = gBackupMapLayout.width - MAP_OFFSET_W;
+    int height = gBackupMapLayout.height - MAP_OFFSET_H;
     u16 *farmMap = gSaveBlock1Ptr->farmMap;
 
     // Iterate through the inner area of the map (ignoring the borders)
@@ -38,8 +38,8 @@ bool32 FarmMapViewIsEmpty(void)
 void LoadFarmMap(void)
 {
     int i, j;
-    int width = gBackupMapLayout.width - (2 * MAP_OFFSET);
-    int height = gBackupMapLayout.height - (2 * MAP_OFFSET);
+    int width = gBackupMapLayout.width - MAP_OFFSET_W;
+    int height = gBackupMapLayout.height - MAP_OFFSET_H;
     u16 *farmMap = gSaveBlock1Ptr->farmMap;
 
     if (!FarmMapViewIsEmpty())
