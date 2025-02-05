@@ -3,7 +3,7 @@
 
 ASSUMPTIONS
 {
-    ASSUME(gMovesInfo[MOVE_SALT_CURE].effect == EFFECT_SALT_CURE);
+    ASSUME(MoveHasAdditionalEffect(MOVE_SALT_CURE, MOVE_EFFECT_SALT_CURE) == TRUE);
 }
 
 SINGLE_BATTLE_TEST("Salt Cure inflicts 1/8 of the target's maximum HP as damage per turn")
@@ -97,5 +97,38 @@ SINGLE_BATTLE_TEST("Salt Cure does not get applied if hitting a Substitute")
         ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
         MESSAGE("The substitute took damage for the opposing Wobbuffet!");
         NOT MESSAGE("The opposing Wobbuffet is being salt cured!");
+    }
+}
+
+SINGLE_BATTLE_TEST("Salt Cure residual damage does not inflict any damage against Magic Guard")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_CLEFABLE) { Ability(ABILITY_MAGIC_GUARD); };
+    } WHEN {
+        TURN { MOVE(player, MOVE_SALT_CURE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
+        HP_BAR(opponent);
+        NONE_OF {
+            ANIMATION(ANIM_TYPE_GENERAL, B_ANIM_SALT_CURE_DAMAGE, opponent);
+            HP_BAR(opponent);
+            MESSAGE("The opposing Clefable is hurt by Salt Cure!");
+        }
+    }
+}
+
+SINGLE_BATTLE_TEST("If Salt Cure faints the target, messages will be applied in the correct order")
+{
+    GIVEN {
+        PLAYER(SPECIES_WOBBUFFET);
+        OPPONENT(SPECIES_WOBBUFFET) { HP(25); }
+    } WHEN {
+        TURN { MOVE(player, MOVE_SALT_CURE); }
+    } SCENE {
+        ANIMATION(ANIM_TYPE_MOVE, MOVE_SALT_CURE, player);
+        MESSAGE("The opposing Wobbuffet is being salt cured!");
+        MESSAGE("The opposing Wobbuffet is hurt by Salt Cure!");
+        MESSAGE("The opposing Wobbuffet fainted!");
     }
 }

@@ -743,10 +743,11 @@ static void BattleLoadOpponentMonSpriteGfxCustom(u16 species, bool8 isFemale, bo
 {
     const u32 *lzPaletteData = GetMonSpritePalFromSpecies(species, isShiny, isFemale);
     u16 paletteOffset = OBJ_PLTT_ID(battlerId);
+    void *buffer = malloc_and_decompress(lzPaletteData, NULL);
 
-    LZDecompressWram(lzPaletteData, gDecompressionBuffer);
-    LoadPalette(gDecompressionBuffer, paletteOffset, PLTT_SIZE_4BPP);
-    LoadPalette(gDecompressionBuffer, BG_PLTT_ID(8) + BG_PLTT_ID(battlerId), PLTT_SIZE_4BPP);
+    LoadPalette(buffer, paletteOffset, PLTT_SIZE_4BPP);
+    LoadPalette(buffer, BG_PLTT_ID(8) + BG_PLTT_ID(battlerId), PLTT_SIZE_4BPP);
+    Free(buffer);
 }
 
 static void SetConstSpriteValues(struct PokemonSpriteVisualizer *data)
@@ -2002,13 +2003,17 @@ static void ReloadPokemonSprites(struct PokemonSpriteVisualizer *data)
 
     //Follower Sprite
     u16 graphicsId = (OBJ_EVENT_GFX_MON_BASE + species) & OBJ_EVENT_GFX_SPECIES_MASK;
+    struct FollowerSpriteVisualizerData followerData;
+    followerData.currentmonId = graphicsId;
+    followerData.isFemale = data->isFemale;
+    followerData.isShiny = data->isShiny;
     graphicsId |= data->isFemale << OBJ_EVENT_GFX_SPECIES_BITS;
-    graphicsId += data->isShiny ? SPECIES_SHINY_TAG : 0;
-    data->followerspriteId = CreateObjectGraphicsSprite(graphicsId,
+    data->followerspriteId = CreateObjectGraphicsFollowerSpriteForVisualizer(graphicsId,
                                                         SpriteCB_Follower,
                                                         VISUALIZER_FOLLOWER_X,
                                                         VISUALIZER_FOLLOWER_Y,
-                                                        0);
+                                                        0,
+                                                        &followerData);
     gSprites[data->followerspriteId].oam.priority = 0;
     gSprites[data->followerspriteId].anims = sAnims_Follower;
 
