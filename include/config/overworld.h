@@ -8,14 +8,14 @@
 // Other settings
 #define OW_POISON_DAMAGE                GEN_LATEST // In Gen4, Pokémon no longer faint from Poison in the overworld. In Gen5+, they no longer take damage at all.
 #define OW_DOUBLE_APPROACH_WITH_ONE_MON FALSE      // If enabled, you can be spotted by two trainers at the same time even if you only have one eligible Pokémon in your party.
-#define OW_HIDE_REPEAT_MAP_POPUP        FALSE      // If enabled, map popups will not appear if entering a map with the same Map Section Id as the last.
-#define OW_FRLG_WHITEOUT                FALSE      // If enabled, shows an additional whiteout message and post whiteout event script with healing NPC.
+#define OW_HIDE_REPEAT_MAP_POPUP        TRUE      // If enabled, map popups will not appear if entering a map with the same Map Section Id as the last.
+#define OW_FRLG_WHITEOUT                TRUE       // If enabled, shows an additional whiteout message and post whiteout event script with healing NPC.
 
 // Item Obtain Description Box
 #define OW_ITEM_DESCRIPTIONS_OFF        0   // never show descriptions
 #define OW_ITEM_DESCRIPTIONS_FIRST_TIME 1   // show first time (** SAVE-BREAKING - see struct SaveBlock3 **)
 #define OW_ITEM_DESCRIPTIONS_ALWAYS     2   // always show description
-#define OW_SHOW_ITEM_DESCRIPTIONS       OW_ITEM_DESCRIPTIONS_OFF    // If enabled, item descriptions/images will be shown when finding items.
+#define OW_SHOW_ITEM_DESCRIPTIONS       OW_ITEM_DESCRIPTIONS_FIRST_TIME    // If enabled, item descriptions/images will be shown when finding items.
 
 // These generational defines only make a distinction for Berries and the OW_PC_MOVE_ORDER
 #define GEN_6_XY GEN_6
@@ -54,11 +54,11 @@
                                                   // 16x32, 32x32, 64x64 etc are fine
 #define OW_MON_WANDER_WALK             TRUE       // If true, OW pokemon with MOVEMENT_TYPE_WANDER will walk-in-place in between steps.
 // Follower Pokémon
-#define OW_FOLLOWERS_ENABLED           FALSE      // Enables follower Pokémon, HGSS style. Requires OW_POKEMON_OBJECT_EVENTS. Note that additional scripting may be required for them to be fully supported!
+#define OW_FOLLOWERS_ENABLED           TRUE       // Enables follower Pokémon, HGSS style. Requires OW_POKEMON_OBJECT_EVENTS. Note that additional scripting may be required for them to be fully supported!
 #define OW_FOLLOWERS_BOBBING           TRUE       // If TRUE, follower Pokémon will bob up and down during their idle & walking animations
 #define OW_FOLLOWERS_POKEBALLS         TRUE       // If TRUE, follower Pokémon will emerge from the Poké Ball they are stored in, instead of a normal Poké Ball
-#define OW_FOLLOWERS_WEATHER_FORMS     FALSE      // If TRUE, Castform and Cherrim gain FORM_CHANGE_OVERWORLD_WEATHER, which will make them transform in the overworld based on the weather.
-#define OW_FOLLOWERS_COPY_WILD_PKMN    FALSE      // If TRUE, follower Pokémon that know Transform or have Illusion/Imposter will copy wild Pokémon at random.
+#define OW_FOLLOWERS_WEATHER_FORMS     TRUE       // If TRUE, Castform and Cherrim gain FORM_CHANGE_OVERWORLD_WEATHER, which will make them transform in the overworld based on the weather.
+#define OW_FOLLOWERS_COPY_WILD_PKMN    TRUE       // If TRUE, follower Pokémon that know Transform or have Illusion/Imposter will copy wild Pokémon at random.
 #define OW_BATTLE_ONLY_FORMS           TRUE       // If TRUE, loads overworld sprites for battle-only forms like Mega Evos. Requires OW_POKEMON_OBJECT_EVENTS.
 
 // Out-of-battle Ability effects
@@ -76,9 +76,9 @@
 #define GEN_8_PLA                       GEN_LATEST + 2
 
 //Time
-#define OW_TIMES_OF_DAY                 GEN_LATEST // Different generations have the times of day change at different times.
-#define OW_USE_FAKE_RTC                 FALSE      // When TRUE, seconds on the in-game clock will only advance once every 60 playTimeVBlanks (every 60 frames).
-#define OW_ALTERED_TIME_RATIO           GEN_LATEST // In GEN_8_PLA, the time in game moves forward 60 seconds for every second in the RTC. In GEN_9, it is 20 seconds. This has no effect if OW_USE_FAKE_RTC is FALSE.
+#define OW_TIMES_OF_DAY                 GEN_VALLEY // Different generations have the times of day change at different times.
+#define OW_USE_FAKE_RTC                 TRUE       // When TRUE, seconds on the in-game clock will only advance once every 60 playTimeVBlanks (every 60 frames).
+#define OW_ALTERED_TIME_RATIO           GEN_VALLEY // In GEN_8_PLA, the time in game moves forward 60 seconds for every second in the RTC. In GEN_9, it is 20 seconds. This has no effect if OW_USE_FAKE_RTC is FALSE.
 
 // Overworld flags
 // To use the following features in scripting, replace the 0s with the flag ID you're assigning it to.
@@ -111,7 +111,7 @@
 
 // Pokémon Center
 #define OW_IGNORE_EGGS_ON_HEAL           GEN_LATEST         // In Gen 4+, the nurse in the Pokémon Center does not heal Eggs on healing machine.
-#define OW_UNION_DISABLE_CHECK           FALSE              // When TRUE, the nurse does not inform the player if there is a trainer waiting in the Union Room. This speeds up the loading of the Pokémon Center.
+#define OW_UNION_DISABLE_CHECK           TRUE               // When TRUE, the nurse does not inform the player if there is a trainer waiting in the Union Room. This speeds up the loading of the Pokémon Center.
 #define OW_FLAG_MOVE_UNION_ROOM_CHECK    0                  // If this flag is set, the game will only check if players are in the Union Room while healing Pokémon, and not when players enter the Pokémon Center. This speeds up the loading of the Pokémon Center. This is ignored if OW_UNION_DISABLE_CHECK is TRUE.
 
 // Berry Blender
