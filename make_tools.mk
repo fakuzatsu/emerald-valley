@@ -14,10 +14,12 @@ CHECKTOOLDIRS := $(CHECK_TOOL_NAMES:%=$(TOOLS_DIR)/%)
 PORYDIR := $(TOOL_PORY:%=$(TOOLS_DIR)/%)
 
 # Tool making doesnt require a pokeemerald dependency scan.
-RULES_NO_SCAN += tools check-tools clean-tools clean-check-tools $(TOOLDIRS) $(CHECKTOOLDIRS) 
-ifeq ($(UNUSED_ERROR),0)
+RULES_NO_SCAN += tools check-tools clean-tools clean-check-tools $(TOOLDIRS) $(CHECKTOOLDIRS)
+
+ifneq ($(NO_PORY),1)
 RULES_NO_SCAN += $(PORYDIR)
 endif
+
 .PHONY: $(RULES_NO_SCAN)
 
 tools: $(TOOLDIRS) $(PORYDIR)
@@ -35,8 +37,7 @@ $(PORYDIR):
 
 clean-tools:
 	@$(foreach tooldir,$(TOOLDIRS),$(MAKE) clean -C $(tooldir);)
-	@echo "rm -f poryscript"
-	@rm -f $(PORYDIR)/poryscript
+	rm -f $(PORYDIR)/poryscript
 
 clean-check-tools:
 	@$(foreach tooldir,$(CHECKTOOLDIRS),$(MAKE) clean -C $(tooldir);)
