@@ -1,11 +1,23 @@
 import os
 import subprocess
 import sys
+import platform
 
-# Define the path to Aseprite executable here (adjust the path as needed for your system)
-ASEPRITE_PATH = r"/mnt/c/Program Files/Aseprite/aseprite.exe"  # For WSL (default Windows path)
-# For macOS or Linux, you might use something like:
-# ASEPRITE_PATH = "/usr/local/bin/aseprite"
+os_name = platform.system()
+
+if os_name == "Linux":
+    # Check if running inside WSL
+    if "microsoft" in os.popen("uname -r").read().lower():
+        ASEPRITE_PATH = r"/mnt/c/Program Files/Aseprite/aseprite.exe"  # WSL Path
+    else:
+        ASEPRITE_PATH = r"/usr/bin/aseprite"  # Native Linux path
+elif os_name == "Windows":
+    ASEPRITE_PATH = r"C:\Program Files\Aseprite\aseprite.exe"
+elif os_name == "Darwin":
+    ASEPRITE_PATH = r"/Applications/Aseprite.app/Contents/MacOS/aseprite"
+else:
+    print("Unknown OS")
+    sys.exit(1)
 
 def split_layers(directory):
     # Search for the .aseprite file inside the directory
