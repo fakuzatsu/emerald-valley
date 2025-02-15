@@ -4416,7 +4416,7 @@
       "name": "EmeraldValleyFarm_Layout",
       "width": 20,
       "height": 20,
-      "primary_tileset": "gTileset_General",
+      "primary_tileset": "gTileset_ValleySpring",
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/EmeraldValleyFarm/border.bin",
       "blockdata_filepath": "data/layouts/EmeraldValleyFarm/map.bin"

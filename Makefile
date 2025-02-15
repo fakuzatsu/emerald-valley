@@ -162,6 +162,8 @@ RAMSCRGEN    := $(TOOLS_DIR)/ramscrgen/ramscrgen$(EXE)
 FIX          := $(TOOLS_DIR)/gbafix/gbafix$(EXE)
 MAPJSON      := $(TOOLS_DIR)/mapjson/mapjson$(EXE)
 JSONPROC     := $(TOOLS_DIR)/jsonproc/jsonproc$(EXE)
+ASESPLIT	 := $(TOOLS_DIR)/aseplit/aseplit.py
+TILES		 := $(TOOLS_DIR)/porytiles/porytiles$(EXE)
 SCRIPT    	 := $(TOOLS_DIR)/poryscript/poryscript$(EXE)
 TRAINERPROC  := $(TOOLS_DIR)/trainerproc/trainerproc$(EXE)
 PATCHELF     := $(TOOLS_DIR)/patchelf/patchelf$(EXE)
@@ -320,13 +322,20 @@ include spritesheet_rules.mk
 include json_data_rules.mk
 include audio_rules.mk
 
+ifneq ($(NO_PORY),1)
+AUTO_GEN_TARGETS += $(patsubst %/porytiles,%,$(shell find data/tilesets/primary -type d -name 'porytiles'))
 AUTO_GEN_TARGETS += $(patsubst %.pory,%.inc,$(shell find data/ -type f -name '*.pory'))
+endif
 
 # NOTE: Tools must have been built prior (FIXME)
 # so you can't really call this rule directly
 generated: $(AUTO_GEN_TARGETS)
 	@: # Silence the "Nothing to be done for `generated'" message, which some people were confusing for an error.
 
+data/tilesets/primary/%: data/tilesets/primary/%/porytiles;
+	python3 $(ASESPLIT) $< && $(TILES) compile-primary -Wall -o $@ $< include/constants/metatile_behaviors.h
+
+data/%.inc: data/%.pory; $(SCRIPT) -i $< -o $@ -fc tools/poryscript/font_config.json -cc tools/poryscript/command_config.json
 
 %.s:   ;
 %.png: ;
@@ -341,7 +350,6 @@ generated: $(AUTO_GEN_TARGETS)
 %.gbapal: %.png  ; $(GFX) $< $@
 %.lz:     %      ; $(GFX) $< $@
 %.rl:     %      ; $(GFX) $< $@
-data/%.inc: data/%.pory; $(SCRIPT) -i $< -o $@ -fc tools/poryscript/font_config.json -cc tools/poryscript/command_config.json
 
 clean-generated:
 	-rm -f $(AUTO_GEN_TARGETS)
