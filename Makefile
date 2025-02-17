@@ -170,6 +170,10 @@ PATCHELF     := $(TOOLS_DIR)/patchelf/patchelf$(EXE)
 ROMTEST      ?= $(shell { command -v mgba-rom-test || command -v $(TOOLS_DIR)/mgba/mgba-rom-test$(EXE); } 2>/dev/null)
 ROMTESTHYDRA := $(TOOLS_DIR)/mgba-rom-test-hydra/mgba-rom-test-hydra$(EXE)
 
+# Check if the optional tools are available
+SCRIPT_EXISTS := $(shell command -v $(SCRIPT) >/dev/null 2>&1 && echo 1 || echo 0)
+TILES_EXISTS := $(shell command -v $(TILES) >/dev/null 2>&1 && echo 1 || echo 0)
+
 PERL := perl
 SHA1 := $(shell { command -v sha1sum || command -v shasum; } 2>/dev/null) -c
 
@@ -322,9 +326,15 @@ include spritesheet_rules.mk
 include json_data_rules.mk
 include audio_rules.mk
 
+# Only add these if the tools are available
 ifneq ($(NO_PORY),1)
-AUTO_GEN_TARGETS += $(patsubst %/porytiles,%,$(shell find data/tilesets/primary -type d -name 'porytiles'))
-AUTO_GEN_TARGETS += $(patsubst %.pory,%.inc,$(shell find data/ -type f -name '*.pory'))
+  ifeq ($(SCRIPT_EXISTS),1)
+    AUTO_GEN_TARGETS += $(patsubst %.pory,%.inc,$(shell find data/ -type f -name '*.pory'))
+  endif
+
+  ifeq ($(TILES_EXISTS),1)
+    AUTO_GEN_TARGETS += $(patsubst %/porytiles,%,$(shell find data/tilesets/primary -type d -name 'porytiles'))
+  endif
 endif
 
 # NOTE: Tools must have been built prior (FIXME)

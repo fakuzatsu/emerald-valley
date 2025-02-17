@@ -13,16 +13,22 @@ TOOLDIRS := $(TOOL_NAMES:%=$(TOOLS_DIR)/%)
 CHECKTOOLDIRS := $(CHECK_TOOL_NAMES:%=$(TOOLS_DIR)/%)
 PORYDIR := $(TOOL_PORY:%=$(TOOLS_DIR)/%)
 
-# Tool making doesnt require a pokeemerald dependency scan.
+# Check if Go is installed
+GO_AVAILABLE := $(shell command -v go >/dev/null 2>&1 && echo 1 || echo 0)
+
+# Tool making doesn't require a pokeemerald dependency scan.
 RULES_NO_SCAN += tools check-tools clean-tools clean-check-tools $(TOOLDIRS) $(CHECKTOOLDIRS)
 
+# Only add poryscript if Go is available
 ifneq ($(NO_PORY),1)
-RULES_NO_SCAN += $(PORYDIR)
+  ifeq ($(GO_AVAILABLE),1)
+    RULES_NO_SCAN += $(PORYDIR)
+  endif
 endif
 
 .PHONY: $(RULES_NO_SCAN)
 
-tools: $(TOOLDIRS) $(PORYDIR)
+tools: $(TOOLDIRS) $(if $(and $(filter 1,$(GO_AVAILABLE)),$(filter 0,$(NO_PORY))),$(PORYDIR))
 
 check-tools: $(CHECKTOOLDIRS)
 
@@ -33,6 +39,7 @@ $(CHECKTOOLDIRS):
 	@$(MAKE) -C $@
 
 $(PORYDIR):
+	@echo "Building poryscript..."
 	@cd $(PORYDIR) && go build -o poryscript
 
 clean-tools:
