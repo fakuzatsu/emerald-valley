@@ -48,10 +48,13 @@ asm(".set FALSE, 0\n"
     ".set TRUE, 1\n"
     ".set PARTY_SIZE, " STR(PARTY_SIZE) "\n"
     ".set VARS_START, " STR(VARS_START) "\n"
-    ".set VARS_END, " STR(VARS_END) "\n"
+    ".set VARS_END, " STR(TEMP_VARS_END) "\n"
     ".set SPECIAL_VARS_START, " STR(SPECIAL_VARS_START) "\n"
     ".set SPECIAL_VARS_END, " STR(SPECIAL_VARS_END) "\n");
 asm(".include \"constants/gba_constants.inc\"\n");
+// VARS_END is set to TEMP_VARS_END during this segment
+// to facilitate use of an enum for general vars.
+// note this means general vars cannot be used in tests.
 
 // Make overworld script macros available.
 asm(".include \"constants/gba_constants.inc\"\n"
