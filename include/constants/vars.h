@@ -5,61 +5,55 @@
 
 // temporary vars
 // The first 0x10 vars are temporary--they are cleared every time a map is loaded.
-#define TEMP_VARS_START 0x4000
+#define TEMP_VARS_START             0x4000
 
-enum TempVars {
-    VAR_TEMP_0 = TEMP_VARS_START,
-    VAR_TEMP_1,
-    VAR_TEMP_2,
-    VAR_TEMP_3, // Note: Used when the player checks a TV
-    VAR_TEMP_4,
-    VAR_TEMP_5,
-    VAR_TEMP_6,
-    VAR_TEMP_7,
-    VAR_TEMP_8,
-    VAR_TEMP_9,
-    VAR_TEMP_A,
-    VAR_TEMP_B,
-    VAR_TEMP_C,
-    VAR_TEMP_D,
-    VAR_TEMP_E,
-    VAR_TEMP_F,
-};
+#define VAR_TEMP_0                 (TEMP_VARS_START + 0x0)
+#define VAR_TEMP_1                 (TEMP_VARS_START + 0x1)
+#define VAR_TEMP_2                 (TEMP_VARS_START + 0x2)
+#define VAR_TEMP_3                 (TEMP_VARS_START + 0x3) // Note: Used when the player checks a TV
+#define VAR_TEMP_4                 (TEMP_VARS_START + 0x4)
+#define VAR_TEMP_5                 (TEMP_VARS_START + 0x5)
+#define VAR_TEMP_6                 (TEMP_VARS_START + 0x6)
+#define VAR_TEMP_7                 (TEMP_VARS_START + 0x7)
+#define VAR_TEMP_8                 (TEMP_VARS_START + 0x8)
+#define VAR_TEMP_9                 (TEMP_VARS_START + 0x9)
+#define VAR_TEMP_A                 (TEMP_VARS_START + 0xA)
+#define VAR_TEMP_B                 (TEMP_VARS_START + 0xB)
+#define VAR_TEMP_C                 (TEMP_VARS_START + 0xC)
+#define VAR_TEMP_D                 (TEMP_VARS_START + 0xD)
+#define VAR_TEMP_E                 (TEMP_VARS_START + 0xE)
+#define VAR_TEMP_F                 (TEMP_VARS_START + 0xF)
 
-#define TEMP_VARS_END   VAR_TEMP_F
-#define NUM_TEMP_VARS   (TEMP_VARS_END - TEMP_VARS_START + 1)
+#define TEMP_VARS_END              VAR_TEMP_F
+#define NUM_TEMP_VARS              (TEMP_VARS_END - TEMP_VARS_START + 1)
 
 // object gfx id vars
 // These 0x10 vars are used to dynamically control a map object's sprite.
 // For example, the rival's sprite id is dynamically set based on the player's gender.
 // See VarGetObjectEventGraphicsId().
-#define OBJ_GFX_VARS_START  (TEMP_VARS_END + 1)
+#define VAR_OBJ_GFX_ID_0           0x4010
+#define VAR_OBJ_GFX_ID_1           0x4011
+#define VAR_OBJ_GFX_ID_2           0x4012
+#define VAR_OBJ_GFX_ID_3           0x4013
+#define VAR_OBJ_GFX_ID_4           0x4014
+#define VAR_OBJ_GFX_ID_5           0x4015
+#define VAR_OBJ_GFX_ID_6           0x4016
+#define VAR_OBJ_GFX_ID_7           0x4017
+#define VAR_OBJ_GFX_ID_8           0x4018
+#define VAR_OBJ_GFX_ID_9           0x4019
+#define VAR_OBJ_GFX_ID_A           0x401A
+#define VAR_OBJ_GFX_ID_B           0x401B
+#define VAR_OBJ_GFX_ID_C           0x401C
+#define VAR_OBJ_GFX_ID_D           0x401D
+#define VAR_OBJ_GFX_ID_E           0x401E
+#define VAR_OBJ_GFX_ID_F           0x401F
 
-enum ObjGfxVars {
-    VAR_OBJ_GFX_ID_0 = OBJ_GFX_VARS_START,
-    VAR_OBJ_GFX_ID_1,
-    VAR_OBJ_GFX_ID_2,
-    VAR_OBJ_GFX_ID_3,
-    VAR_OBJ_GFX_ID_4,
-    VAR_OBJ_GFX_ID_5,
-    VAR_OBJ_GFX_ID_6,
-    VAR_OBJ_GFX_ID_7,
-    VAR_OBJ_GFX_ID_8,
-    VAR_OBJ_GFX_ID_9,
-    VAR_OBJ_GFX_ID_A,
-    VAR_OBJ_GFX_ID_B,
-    VAR_OBJ_GFX_ID_C,
-    VAR_OBJ_GFX_ID_D,
-    VAR_OBJ_GFX_ID_E,
-    VAR_OBJ_GFX_ID_F,
-};
-
-#define OBJ_GFX_VARS_END    VAR_OBJ_GFX_ID_F
-#define NUM_OBJ_GFX_VARS    (OBJ_GFX_VARS_END - OBJ_GFX_VARS_START + 1)
+#define OBJ_GFX_VARS_END           VAR_OBJ_GFX_ID_F
+#define NUM_OBJ_GFX_VARS           (OBJ_GFX_VARS_END - OBJ_GFX_VARS_START + 1)
 
 // general id vars
 // used for general event tracking.
-#define GENERAL_VARS_START  (OBJ_GFX_VARS_END + 1)
+#define GENERAL_VARS_START         (OBJ_GFX_VARS_END + 1)
 
 enum GeneralVars {
     VAR_RECYCLE_GOODS = GENERAL_VARS_START,
@@ -288,43 +282,41 @@ enum GeneralVars {
     VAR_UNUSED_0x40FF, // Unused Var
 };
 
-#define GENERAL_VARS_END    VAR_UNUSED_0x40FF
-#define NUM_GENERAL_VARS    (GENERAL_VARS_END - GENERAL_VARS_START + 1)
+#define GENERAL_VARS_END              VAR_UNUSED_0x40FF
+#define NUM_GENERAL_VARS              (GENERAL_VARS_END - GENERAL_VARS_START + 1)
 
 // total regular vars
-#define VARS_END            GENERAL_VARS_END
-#define VARS_COUNT          (VARS_END - VARS_START + 1)
+#define VARS_END                      GENERAL_VARS_END
+#define VARS_COUNT                    (VARS_END - VARS_START + 1)
 
 // special vars
 // They are commonly used as parameters to commands, or return values from commands.
-#define SPECIAL_VARS_START  0x8000
+#define SPECIAL_VARS_START            0x8000
 
-enum SpecialVars {
-    VAR_0x8000 = SPECIAL_VARS_START,
-    VAR_0x8001,
-    VAR_0x8002,
-    VAR_0x8003,
-    VAR_0x8004,
-    VAR_0x8005,
-    VAR_0x8006,
-    VAR_0x8007,
-    VAR_0x8008,
-    VAR_0x8009,
-    VAR_0x800A,
-    VAR_0x800B,
-    VAR_FACING,
-    VAR_RESULT,
-    VAR_ITEM_ID,
-    VAR_LAST_TALKED,
-    VAR_CONTEST_RANK,
-    VAR_CONTEST_CATEGORY,
-    VAR_MON_BOX_ID,
-    VAR_MON_BOX_POS,
-    VAR_UNUSED_0x8014,
-    VAR_TRAINER_BATTLE_OPPONENT_A,
-};
+#define VAR_0x8000                    SPECIAL_VARS_START
+#define VAR_0x8001                    0x8001
+#define VAR_0x8002                    0x8002
+#define VAR_0x8003                    0x8003
+#define VAR_0x8004                    0x8004
+#define VAR_0x8005                    0x8005
+#define VAR_0x8006                    0x8006
+#define VAR_0x8007                    0x8007
+#define VAR_0x8008                    0x8008
+#define VAR_0x8009                    0x8009
+#define VAR_0x800A                    0x800A
+#define VAR_0x800B                    0x800B
+#define VAR_FACING                    0x800C
+#define VAR_RESULT                    0x800D
+#define VAR_ITEM_ID                   0x800E
+#define VAR_LAST_TALKED               0x800F
+#define VAR_CONTEST_RANK              0x8010
+#define VAR_CONTEST_CATEGORY          0x8011
+#define VAR_MON_BOX_ID                0x8012
+#define VAR_MON_BOX_POS               0x8013
+#define VAR_UNUSED_0x8014             0x8014
+#define VAR_TRAINER_BATTLE_OPPONENT_A 0x8015 // Alias of TRAINER_BATTLE_PARAM.opponentA
 
-#define SPECIAL_VARS_END    VAR_TRAINER_BATTLE_OPPONENT_A
+#define SPECIAL_VARS_END              VAR_TRAINER_BATTLE_OPPONENT_A
 
 // If an overworld trigger uses this pseudo-variable as the trigger check,
 // then the script will be run using RunScriptImmediately instead of in the
