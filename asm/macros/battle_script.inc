@@ -829,7 +829,7 @@
 	.4byte \failInstr
 	.endm
 
-	.macro damagetohalftargethp
+	.macro unused_0x94
 	.byte 0x94
 	.endm
 
@@ -877,11 +877,11 @@
 	.byte 0x9e
 	.endm
 
-	.macro dmgtolevel
+	.macro unused_0x9f
 	.byte 0x9f
 	.endm
 
-	.macro psywavedamageeffect
+	.macro unused_0xA0
 	.byte 0xa0
 	.endm
 
@@ -1269,7 +1269,7 @@
 	.byte 0xed
 	.endm
 
-	.macro removelightscreenreflect
+	.macro removescreens
 	.byte 0xee
 	.endm
 
@@ -1743,10 +1743,6 @@
 	.byte \battler
 	.endm
 
-	.macro hitswitchtargetfailed
-	callnative BS_HitSwitchTargetFailed
-	.endm
-
 	.macro tryrevivalblessing, failInstr:req
 	callnative BS_TryRevivalBlessing
 	.4byte \failInstr
@@ -1949,14 +1945,6 @@
 	various \battler, VARIOUS_RESTORE_PP
 	.endm
 
-	.macro tryactivatemoxie battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_MOXIE
-	.endm
-
-	.macro tryactivatebeastboost battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_BEAST_BOOST
-	.endm
-
 	.macro tryactivatereceiver battler:req
 	various \battler, VARIOUS_TRY_ACTIVATE_RECEIVER
 	.endm
@@ -2040,10 +2028,6 @@
 	.macro jumpifcantuselastresort battler:req, jumpInstr:req
 	various \battler, VARIOUS_TRY_LAST_RESORT
 	.4byte \jumpInstr
-	.endm
-
-	.macro setargtobattledamage
-	various BS_ATTACKER, VARIOUS_SET_ARG_TO_BATTLE_DAMAGE
 	.endm
 
 	.macro tryautotomize battler:req, failInstr:req
@@ -2240,10 +2224,6 @@
 	.4byte \jumpInstr
 	.endm
 
-	.macro tryactivategrimneigh, battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_GRIM_NEIGH
-	.endm
-
 	.macro consumeberry battler:req, fromBattler:req
 	various \battler, VARIOUS_CONSUME_BERRY
 	.byte \fromBattler
@@ -2302,10 +2282,6 @@
 	.macro jumpifnotrototilleraffected battler:req, jumpInstr:req
 	various \battler, VARIOUS_JUMP_IF_NOT_ROTOTILLER_AFFECTED
 	.4byte \jumpInstr
-	.endm
-
-	.macro tryactivatebattlebond battler:req
-	various \battler, VARIOUS_TRY_ACTIVATE_BATTLE_BOND
 	.endm
 
 	.macro jumpifcantreverttoprimal jumpInstr:req
