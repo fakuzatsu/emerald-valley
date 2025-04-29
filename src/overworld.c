@@ -24,6 +24,7 @@
 #include "field_weather.h"
 #include "fieldmap.h"
 #include "fldeff.h"
+#include "follower_npc.h"
 #include "gpu_regs.h"
 #include "heal_location.h"
 #include "io_reg.h"
@@ -68,6 +69,7 @@
 #include "vs_seeker.h"
 #include "frontier_util.h"
 #include "constants/abilities.h"
+#include "constants/event_object_movement.h"
 #include "constants/event_objects.h"
 #include "constants/layouts.h"
 #include "constants/map_types.h"
@@ -458,6 +460,7 @@ static void Overworld_ResetStateAfterWhiteOut(void)
         VarSet(VAR_SHOULD_END_ABNORMAL_WEATHER, 0);
         VarSet(VAR_ABNORMAL_WEATHER_LOCATION, ABNORMAL_WEATHER_NONE);
     }
+    FollowerNPC_TryRemoveFollowerOnWhiteOut();
 }
 
 static void UpdateMiscOverworldStates(void)
@@ -1535,6 +1538,9 @@ static void DoCB1_Overworld(u16 newKeys, u16 heldKeys)
             PlayerStep(inputStruct.dpadDirection, newKeys, heldKeys);
         }
     }
+    // If stop running but keep holding B -> fix follower frame.
+    if (PlayerHasFollowerNPC() && (gPlayerAvatar.flags & PLAYER_AVATAR_FLAG_ON_FOOT) && IsPlayerStandingStill())
+        ObjectEventSetHeldMovement(&gObjectEvents[GetFollowerNPCObjectId()], GetFaceDirectionAnimNum(gObjectEvents[GetFollowerNPCObjectId()].facingDirection));
 }
 
 void CB1_Overworld(void)
@@ -1560,8 +1566,6 @@ const struct BlendSettings gTimeOfDayBlend[] =
 
 void UpdateTimeOfDay(void)
 {
-    if (!OW_ENABLE_DNS)
-        return;
     s32 hours, minutes;
     RtcCalcLocalTime();
     hours = sHoursOverride ? sHoursOverride : gLocalTime.hours;
@@ -1621,10 +1625,11 @@ void UpdateTimeOfDay(void)
 // Whether a map type is naturally lit/outside
 bool32 MapHasNaturalLight(u8 mapType)
 {
-    return (mapType == MAP_TYPE_TOWN
-         || mapType == MAP_TYPE_CITY
-         || mapType == MAP_TYPE_ROUTE
-         || mapType == MAP_TYPE_OCEAN_ROUTE);
+    return (OW_ENABLE_DNS
+         && (mapType == MAP_TYPE_TOWN
+          || mapType == MAP_TYPE_CITY
+          || mapType == MAP_TYPE_ROUTE
+          || mapType == MAP_TYPE_OCEAN_ROUTE));
 }
 
 bool32 CurrentMapHasShadows(void)
@@ -1637,8 +1642,6 @@ bool32 CurrentMapHasShadows(void)
 // Update & mix day / night bg palettes (into unfaded)
 void UpdateAltBgPalettes(u16 palettes)
 {
-    if (!OW_ENABLE_DNS)
-        return;
     const struct Tileset *primary = gMapHeader.mapLayout->primaryTileset;
     const struct Tileset *secondary = gMapHeader.mapLayout->secondaryTileset;
     u32 i = 1;
@@ -1666,7 +1669,7 @@ void UpdateAltBgPalettes(u16 palettes)
 
 void UpdatePalettesWithTime(u32 palettes)
 {
-    if (!OW_ENABLE_DNS || !MapHasNaturalLight(gMapHeader.mapType))
+    if (!MapHasNaturalLight(gMapHeader.mapType))
         return;
     u32 i;
     u32 mask = 1 << 16;
@@ -1685,8 +1688,7 @@ void UpdatePalettesWithTime(u32 palettes)
 
 u8 UpdateSpritePaletteWithTime(u8 paletteNum)
 {
-    if (OW_ENABLE_DNS
-     && MapHasNaturalLight(gMapHeader.mapType)
+    if (MapHasNaturalLight(gMapHeader.mapType)
      && !IS_BLEND_IMMUNE_TAG(GetSpritePaletteTagByPaletteNum(paletteNum)))
         TimeMixPalettes(1, &gPlttBufferUnfaded[OBJ_PLTT_ID(paletteNum)], &gPlttBufferFaded[OBJ_PLTT_ID(paletteNum)], &gTimeBlend.startBlend, &gTimeBlend.endBlend, gTimeBlend.weight);
     return paletteNum;
@@ -2232,6 +2234,7 @@ static bool32 ReturnToFieldLocal(u8 *state)
     case 1:
         InitViewGraphics();
         TryLoadTrainerHillEReaderPalette();
+        FollowerNPC_BindToSurfBlobOnReloadScreen();
         (*state)++;
         break;
     case 2:
@@ -2432,6 +2435,7 @@ static void InitObjectEventsLocal(void)
     TrySpawnObjectEvents(0, 0);
     UpdateFollowingPokemon();
     TryRunOnWarpIntoMapScript();
+    FollowerNPC_HandleSprite();
 }
 
 static void InitObjectEventsReturnToField(void)
