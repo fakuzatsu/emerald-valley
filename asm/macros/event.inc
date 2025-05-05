@@ -339,10 +339,16 @@
 	.endm
 
 	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in rtc.h.
-	@ 0 = MORNING, 1 = DAY, 2 = EVENING, 3 = NIGHT
+	@ 0 = TIME_MIDNIGHT, 1 = TIME_EARLY_MORNING, 2 = TIME_MORNING, 3 = TIME_LATE_MORNING, 4 = TIME_MIDDAY, 5 = TIME_AFTERNOON, 6 = TIME_EVENING, 7 = TIME_NIGHT,
 	.macro gettimeofday
 	callnative ScrCmd_gettimeofday
 	.endm
+
+    @ Sets the values of variable VAR_0x8000 to the generic time of day based on light level.
+    @ 2 = TIME_MORNING, 4 = TIME_MIDDAY, 6 = TIME_EVENING, 7 = TIME_NIGHT
+    .macro getgenerictimeofday
+    callnative ScrCmd_getgenerictimeofday
+    .endm
 
 	@ Plays the specified sound. Only one sound may play at a time, with newer ones interrupting older ones.
 	.macro playse song:req

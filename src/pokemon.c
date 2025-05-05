@@ -4539,12 +4539,12 @@ bool32 DoesMonMeetAdditionalConditions(struct Pokemon *mon, const struct Evoluti
                 currentCondition = TRUE;
             break;
         case IF_TIME:
-            if (GetTimeOfDay() == params[i].arg1)
+            if (GetTimeOfDay(MODE_GENERIC) == params[i].arg1)
                 currentCondition = TRUE;
                 
             break;
         case IF_NOT_TIME:
-            if (GetTimeOfDay() != params[i].arg1)
+            if (GetTimeOfDay(MODE_GENERIC) != params[i].arg1)
                 currentCondition = TRUE;
             break;
         case IF_HOLD_ITEM:
@@ -6634,11 +6634,11 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                         switch (formChanges[i].param2)
                         {
                         case DAY:
-                            if (GetTimeOfDay() == TIME_NIGHT)
+                            if (GetTimeOfDay(MODE_GENERIC) == TIME_NIGHT)
                                 pass = FALSE;
                             break;
                         case NIGHT:
-                            if (GetTimeOfDay() != TIME_NIGHT)
+                            if (GetTimeOfDay(MODE_GENERIC) != TIME_NIGHT)
                                 pass = FALSE;
                             break;
                         }
@@ -6684,11 +6684,11 @@ u32 GetFormChangeTargetSpeciesBoxMon(struct BoxPokemon *boxMon, enum FormChanges
                     switch (formChanges[i].param1)
                     {
                     case DAY:
-                        if (GetTimeOfDay() != TIME_NIGHT)
+                        if (GetTimeOfDay(MODE_GENERIC) != TIME_NIGHT)
                             targetSpecies = formChanges[i].targetSpecies;
                         break;
                     case NIGHT:
-                        if (GetTimeOfDay() == TIME_NIGHT)
+                        if (GetTimeOfDay(MODE_GENERIC) == TIME_NIGHT)
                             targetSpecies = formChanges[i].targetSpecies;
                         break;
                     }

@@ -365,7 +365,7 @@ const struct FollowerMsgInfoExtended gFollowerConditionalMessages[COND_MSG_COUNT
         .emotion = FOLLOWER_EMOTION_MUSIC,
         .conditions =
         {
-            MATCH_TIME_OF_DAY(TIME_DAY),
+            MATCH_TIME_OF_DAY(TIME_MIDDAY),
         },
     },
     [COND_MSG_NIGHT] =

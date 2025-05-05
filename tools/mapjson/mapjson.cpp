@@ -64,7 +64,7 @@ void write_text_file(string filepath, string text) {
 }
 
 
-string json_to_string(const Json &data, const string &field = "", bool silent = false) {
+string json_to_string(const Json &data, const string &field = "", bool silent = false, bool boolToInt = false) {
     const Json value = !field.empty() ? data[field] : data;
     string output = "";
     switch (value.type()) {
@@ -75,10 +75,13 @@ string json_to_string(const Json &data, const string &field = "", bool silent = 
             output = std::to_string(value.int_value());
             break;
         case Json::Type::BOOL:
-            output = value.bool_value() ? "TRUE" : "FALSE";
+            if (boolToInt)
+                output = value.bool_value() ? "1" : "0";
+            else
+                output = value.bool_value() ? "TRUE" : "FALSE";
             break;
         case Json::Type::NUL:
-            output = "";
+            output = boolToInt ? "0" : "";
             break;
         default:{
             if (!silent) {
@@ -221,7 +224,15 @@ string generate_map_events_text(Json map_data) {
                      << json_to_string(obj_event, "trainer_type") << ", "
                      << json_to_string(obj_event, "trainer_sight_or_berry_tree_id") << ", "
                      << json_to_string(obj_event, "script") << ", "
-                     << json_to_string(obj_event, "flag") << "\n";
+                     << json_to_string(obj_event, "flag") << ", "
+                     << json_to_string(obj_event, "afternoon", false, true) << ", "
+                     << json_to_string(obj_event, "earlymorning", false, true) << ", "
+                     << json_to_string(obj_event, "evening", false, true) << ", "
+                     << json_to_string(obj_event, "latemorning", false, true) << ", "
+                     << json_to_string(obj_event, "midday", false, true) << ", "
+                     << json_to_string(obj_event, "midnight", false, true) << ", "
+                     << json_to_string(obj_event, "morning", false, true) << ", "
+                     << json_to_string(obj_event, "night", false, true) << "\n";
             } else if (type == "clone") {
                 text << "\tclone_event " << i + 1 << ", "
                      << json_to_string(obj_event, "graphics_id") << ", "

@@ -19,6 +19,15 @@
 
 #define RTC_ERR_FLAG_MASK      0x0FF0
 
+#define TIME_MIDNIGHT_FLAG      (1 << 0)
+#define TIME_EARLY_MORNING_FLAG (1 << 1)
+#define TIME_MORNING_FLAG       (1 << 2)
+#define TIME_LATE_MORNING_FLAG  (1 << 3)
+#define TIME_MIDDAY_FLAG        (1 << 4)
+#define TIME_AFTERNOON_FLAG     (1 << 5)
+#define TIME_EVENING_FLAG       (1 << 6)
+#define TIME_NIGHT_FLAG         (1 << 7)
+
 //Morning and evening don't exist in Gen 3
 #if OW_TIMES_OF_DAY == GEN_3
     #define MORNING_HOUR_BEGIN 0
@@ -84,27 +93,49 @@
     #define NIGHT_HOUR_BEGIN   20
     #define NIGHT_HOUR_END     6
 #elif OW_TIMES_OF_DAY == GEN_VALLEY
-    #define MORNING_HOUR_BEGIN 6
-    #define MORNING_HOUR_END   9
+    #define MIDNIGHT_HOUR_BEGIN      0
+    #define MIDNIGHT_HOUR_END        3
 
-    #define DAY_HOUR_BEGIN     9
-    #define DAY_HOUR_END       18
+    #define EARLY_MORNING_HOUR_BEGIN 3
+    #define EARLY_MORNING_HOUR_END   6
 
-    #define EVENING_HOUR_BEGIN 18
-    #define EVENING_HOUR_END   21
+    #define MORNING_HOUR_BEGIN       6
+    #define MORNING_HOUR_END         9
 
-    #define NIGHT_HOUR_BEGIN   21
-    #define NIGHT_HOUR_END     6
+    #define LATE_MORNING_HOUR_BEGIN  9
+    #define LATE_MORNING_HOUR_END    12
+
+    #define MIDDAY_HOUR_BEGIN        12
+    #define MIDDAY_HOUR_END          15
+
+    #define AFTERNOON_HOUR_BEGIN     15
+    #define AFTERNOON_HOUR_END       18
+
+    #define EVENING_HOUR_BEGIN       18
+    #define EVENING_HOUR_END         21
+
+    #define NIGHT_HOUR_BEGIN         21
+    #define NIGHT_HOUR_END           0
 #endif
 
 // TIMES_OF_DAY_COUNT must be last
 enum TimeOfDay 
 {
+    TIME_MIDNIGHT,
+    TIME_EARLY_MORNING,
     TIME_MORNING,
-    TIME_DAY,
+    TIME_LATE_MORNING,
+    TIME_MIDDAY,
+    TIME_AFTERNOON,
     TIME_EVENING,
     TIME_NIGHT,
     TIMES_OF_DAY_COUNT,
+};
+
+enum TimeOfDayMode 
+{
+    MODE_GRANULAR,
+    MODE_GENERIC,
 };
 
 #define TIME_OF_DAY_DEFAULT    0
@@ -134,7 +165,7 @@ void FormatHexDate(u8 *dest, s32 year, s32 month, s32 day);
 void RtcCalcTimeDifference(struct SiiRtcInfo *rtc, struct Time *result, struct Time *t);
 void RtcCalcLocalTime(void);
 bool8 IsBetweenHours(s32 hours, s32 begin, s32 end);
-enum TimeOfDay GetTimeOfDay(void);
+enum TimeOfDay GetTimeOfDay(enum TimeOfDayMode mode);
 enum TimeOfDay GetTimeOfDayForDex(void);
 void RtcInitLocalTimeOffset(s32 hour, s32 minute);
 void RtcCalcLocalTimeOffset(s32 days, s32 hours, s32 minutes, s32 seconds);

@@ -117,8 +117,12 @@ enum TimeMenuDebugMenu
 
 enum TimeMenuTimeOfDay
 {
+    DEBUG_TIME_MENU_ITEM_MIDNIGHT,
+    DEBUG_TIME_MENU_ITEM_EARLY_MORNING,
     DEBUG_TIME_MENU_ITEM_MORNING,
-    DEBUG_TIME_MENU_ITEM_DAY,
+    DEBUG_TIME_MENU_ITEM_LATE_MORNING,
+    DEBUG_TIME_MENU_ITEM_MIDDAY,
+    DEBUG_TIME_MENU_ITEM_AFTERNOON,
     DEBUG_TIME_MENU_ITEM_EVENING,
     DEBUG_TIME_MENU_ITEM_NIGHT, 
 };
@@ -559,8 +563,12 @@ static const u8 *const gDayNameStringsTable[WEEKDAY_COUNT] = {
 };
 
 static const u8 *const gTimeOfDayStringsTable[TIMES_OF_DAY_COUNT] = {
+    COMPOUND_STRING("Midnight"),
+    COMPOUND_STRING("Early Morning"),
     COMPOUND_STRING("Morning"),
-    COMPOUND_STRING("Day"),
+    COMPOUND_STRING("Late Morning"),
+    COMPOUND_STRING("Midday"),
+    COMPOUND_STRING("Afternoon"),
     COMPOUND_STRING("Evening"),
     COMPOUND_STRING("Night"),
 };
@@ -660,10 +668,14 @@ static const struct ListMenuItem sDebugMenu_Items_TimeMenu[] =
 
 static const struct ListMenuItem sDebugMenu_Items_TimeMenu_TimesOfDay[] =
 {
-    [DEBUG_TIME_MENU_ITEM_MORNING] = {gTimeOfDayStringsTable[TIME_MORNING], DEBUG_TIME_MENU_ITEM_MORNING},
-    [DEBUG_TIME_MENU_ITEM_DAY] = {gTimeOfDayStringsTable[TIME_DAY],         DEBUG_TIME_MENU_ITEM_DAY},
-    [DEBUG_TIME_MENU_ITEM_EVENING] = {gTimeOfDayStringsTable[TIME_EVENING], DEBUG_TIME_MENU_ITEM_EVENING},
-    [DEBUG_TIME_MENU_ITEM_NIGHT] = {gTimeOfDayStringsTable[TIME_NIGHT],     DEBUG_TIME_MENU_ITEM_NIGHT},
+    [DEBUG_TIME_MENU_ITEM_MIDNIGHT]      = {gTimeOfDayStringsTable[TIME_MIDNIGHT],      DEBUG_TIME_MENU_ITEM_MIDNIGHT},
+    [DEBUG_TIME_MENU_ITEM_EARLY_MORNING] = {gTimeOfDayStringsTable[TIME_EARLY_MORNING], DEBUG_TIME_MENU_ITEM_EARLY_MORNING},
+    [DEBUG_TIME_MENU_ITEM_MORNING]       = {gTimeOfDayStringsTable[TIME_MORNING],       DEBUG_TIME_MENU_ITEM_MORNING},
+    [DEBUG_TIME_MENU_ITEM_LATE_MORNING]  = {gTimeOfDayStringsTable[TIME_LATE_MORNING],  DEBUG_TIME_MENU_ITEM_LATE_MORNING},
+    [DEBUG_TIME_MENU_ITEM_MIDDAY]        = {gTimeOfDayStringsTable[TIME_MIDDAY],        DEBUG_TIME_MENU_ITEM_MIDDAY},
+    [DEBUG_TIME_MENU_ITEM_AFTERNOON]     = {gTimeOfDayStringsTable[TIME_AFTERNOON],     DEBUG_TIME_MENU_ITEM_AFTERNOON},
+    [DEBUG_TIME_MENU_ITEM_EVENING]       = {gTimeOfDayStringsTable[TIME_EVENING],       DEBUG_TIME_MENU_ITEM_EVENING},
+    [DEBUG_TIME_MENU_ITEM_NIGHT]         = {gTimeOfDayStringsTable[TIME_NIGHT],         DEBUG_TIME_MENU_ITEM_NIGHT},
 };
 
 static const struct ListMenuItem sDebugMenu_Items_TimeMenu_Weekdays[] =
@@ -951,8 +963,12 @@ static void (*const sDebugMenu_Actions_TimeMenu[])(u8) =
 
 static void (*const sDebugMenu_Actions_TimeMenu_TimesOfDay[])(u8) =
 {
+    [DEBUG_TIME_MENU_ITEM_MIDNIGHT] = DebugAction_TimeMenu_ChangeTimeOfDay,
+    [DEBUG_TIME_MENU_ITEM_EARLY_MORNING] = DebugAction_TimeMenu_ChangeTimeOfDay,
     [DEBUG_TIME_MENU_ITEM_MORNING] = DebugAction_TimeMenu_ChangeTimeOfDay,
-    [DEBUG_TIME_MENU_ITEM_DAY] = DebugAction_TimeMenu_ChangeTimeOfDay,
+    [DEBUG_TIME_MENU_ITEM_LATE_MORNING] = DebugAction_TimeMenu_ChangeTimeOfDay,
+    [DEBUG_TIME_MENU_ITEM_MIDDAY] = DebugAction_TimeMenu_ChangeTimeOfDay,
+    [DEBUG_TIME_MENU_ITEM_AFTERNOON] = DebugAction_TimeMenu_ChangeTimeOfDay,
     [DEBUG_TIME_MENU_ITEM_EVENING] = DebugAction_TimeMenu_ChangeTimeOfDay,
     [DEBUG_TIME_MENU_ITEM_NIGHT] = DebugAction_TimeMenu_ChangeTimeOfDay,
 };
@@ -2348,13 +2364,25 @@ static void DebugAction_TimeMenu_PrintTimeOfDay(u8 taskId)
 
 void DebugMenu_CalculateTimeOfDay(struct ScriptContext *ctx)
 {
-    switch (GetTimeOfDay())
+    switch (GetTimeOfDay(MODE_GRANULAR))
     {
+        case TIME_MIDNIGHT:
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_MIDNIGHT]);
+            break;
+        case TIME_EARLY_MORNING:
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_EARLY_MORNING]);
+            break;
         case TIME_MORNING:
             StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_MORNING]);
             break;
-        case TIME_DAY:
-            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_DAY]);
+        case TIME_LATE_MORNING:
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_LATE_MORNING]);
+            break;
+        case TIME_MIDDAY:
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_MIDDAY]);
+            break;
+        case TIME_AFTERNOON:
+            StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_AFTERNOON]);
             break;
         case TIME_EVENING:
             StringExpandPlaceholders(gStringVar1, gTimeOfDayStringsTable[TIME_EVENING]);
@@ -3780,11 +3808,23 @@ static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId)
     DebugAction_DestroyExtraWindow(taskId);
     switch (input)
     {
+        case DEBUG_TIME_MENU_ITEM_MIDNIGHT:
+            FakeRtc_ForwardTimeTo(MIDNIGHT_HOUR_BEGIN, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_EARLY_MORNING:
+            FakeRtc_ForwardTimeTo(EARLY_MORNING_HOUR_BEGIN, 0, 0);
+            break;
         case DEBUG_TIME_MENU_ITEM_MORNING:
             FakeRtc_ForwardTimeTo(MORNING_HOUR_BEGIN, 0, 0);
             break;
-        case DEBUG_TIME_MENU_ITEM_DAY:
-            FakeRtc_ForwardTimeTo(DAY_HOUR_BEGIN, 0, 0);
+        case DEBUG_TIME_MENU_ITEM_LATE_MORNING:
+            FakeRtc_ForwardTimeTo(LATE_MORNING_HOUR_BEGIN, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_MIDDAY:
+            FakeRtc_ForwardTimeTo(MIDDAY_HOUR_BEGIN, 0, 0);
+            break;
+        case DEBUG_TIME_MENU_ITEM_AFTERNOON:
+            FakeRtc_ForwardTimeTo(AFTERNOON_HOUR_BEGIN, 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_EVENING:
             FakeRtc_ForwardTimeTo(EVENING_HOUR_BEGIN, 0, 0);

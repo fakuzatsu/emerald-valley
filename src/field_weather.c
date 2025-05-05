@@ -11,6 +11,7 @@
 #include "menu.h"
 #include "palette.h"
 #include "random.h"
+#include "rtc.h"
 #include "script.h"
 #include "start_menu.h"
 #include "sound.h"
@@ -662,7 +663,7 @@ static void ApplyDroughtColorMapWithBlend(s8 colorMapIndex, u8 blendCoeff, u32 b
 static void ApplyFogBlend(u8 blendCoeff, u32 blendColor)
 {
     u32 curPalIndex;
-    u16 fogCoeff = min((gTimeOfDay + 1) * 4, 12);
+    u16 fogCoeff = min((GetTimeOfDay(MODE_GENERIC) + 1) * 4, 12);
 
     // First blend all palettes with time
     UpdateAltBgPalettes(PALETTES_BG);
@@ -878,7 +879,7 @@ void UpdateSpritePaletteWithWeather(u8 spritePaletteIndex, bool8 allowFog)
             // In horizontal fog, only specific palettes should be fog-blended
             if (allowFog)
             {
-                i = min((gTimeOfDay + 1) * 4, 12); // fog coeff, highest in day and lowest at night
+                i = min((GetTimeOfDay(MODE_GENERIC) + 1) * 4, 12); // fog coeff, highest in day and lowest at night
                 paletteIndex = PLTT_ID(paletteIndex);
                 // First blend with time
                 CpuFastCopy(gPlttBufferUnfaded + paletteIndex, gPlttBufferFaded + paletteIndex, PLTT_SIZE_4BPP);

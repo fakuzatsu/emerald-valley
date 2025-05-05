@@ -378,7 +378,7 @@ u16 GetCurrentMapWildMonHeaderId(void)
 enum TimeOfDay GetTimeOfDayForEncounters(u32 headerId, enum WildPokemonArea area)
 {
     const struct WildPokemonInfo *wildMonInfo;
-    enum TimeOfDay timeOfDay = GetTimeOfDay();
+    enum TimeOfDay timeOfDay = GetTimeOfDay(MODE_GENERIC);
 
     if (!OW_TIME_OF_DAY_ENCOUNTERS)
         return TIME_OF_DAY_DEFAULT;

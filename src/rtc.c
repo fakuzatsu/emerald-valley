@@ -326,15 +326,33 @@ bool8 IsBetweenHours(s32 hours, s32 begin, s32 end)
         return hours >= begin && hours < end;
 }
 
-enum TimeOfDay GetTimeOfDay(void)
+enum TimeOfDay GetTimeOfDay(enum TimeOfDayMode mode)
 {
     UpdateTimeOfDay();
+    if (mode == MODE_GENERIC)
+    {
+        switch (gTimeOfDay)
+        {
+        case TIME_MORNING:
+            return TIME_MORNING;
+        case TIME_LATE_MORNING:
+        case TIME_MIDDAY:
+        case TIME_AFTERNOON:
+            return TIME_MIDDAY;
+        case TIME_EVENING:
+            return TIME_EVENING;
+        case TIME_NIGHT:
+        case TIME_MIDNIGHT:
+        case TIME_EARLY_MORNING:
+            return TIME_NIGHT;
+        }
+    }
     return gTimeOfDay;
 }
 
 enum TimeOfDay GetTimeOfDayForDex(void)
 {
-    return OW_TIME_OF_DAY_ENCOUNTERS ? GetTimeOfDay() : TIME_OF_DAY_DEFAULT;
+    return OW_TIME_OF_DAY_ENCOUNTERS ? GetTimeOfDay(MODE_GENERIC) : TIME_OF_DAY_DEFAULT;
 }
 
 void RtcInitLocalTimeOffset(s32 hour, s32 minute)
@@ -457,10 +475,10 @@ enum Weekday GetDayOfWeek(void)
   
 enum TimeOfDay TryIncrementTimeOfDay(enum TimeOfDay timeOfDay)
 {
-    return timeOfDay == TIME_NIGHT ? TIME_MORNING : timeOfDay + 1;
+    return timeOfDay == TIME_NIGHT ? TIME_MIDNIGHT : timeOfDay + 1; // Zatsu TODO
 }
 
 enum TimeOfDay TryDecrementTimeOfDay(enum TimeOfDay timeOfDay)
 {
-    return timeOfDay == TIME_MORNING ? TIME_NIGHT : timeOfDay - 1;
+    return timeOfDay == TIME_MIDNIGHT ? TIME_NIGHT : timeOfDay - 1; // Zatsu TODO
 }

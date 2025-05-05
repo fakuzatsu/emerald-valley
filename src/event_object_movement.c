@@ -1757,6 +1757,46 @@ u8 TrySpawnObjectEventTemplate(const struct ObjectEventTemplate *objectEventTemp
     return objectEventId;
 }
 
+static void TrySpawnObjectEventTemplateBasedOnSchedule(const struct ObjectEventTemplate *objectEventTemplate, u8 mapNum, u8 mapGroup, s16 cameraX, s16 cameraY, enum TimeOfDay timeOfDay)
+{
+  switch(timeOfDay)
+  {
+    case TIME_MIDNIGHT:
+      if (objectEventTemplate->timeVisibility & TIME_MIDNIGHT_FLAG)
+        TrySpawnObjectEventTemplate(objectEventTemplate, mapNum, mapGroup, cameraX, cameraY);
+      break;
+    case TIMES_OF_DAY_COUNT:
+    case TIME_EARLY_MORNING:
+      if (objectEventTemplate->timeVisibility & TIME_EARLY_MORNING_FLAG)
+        TrySpawnObjectEventTemplate(objectEventTemplate, mapNum, mapGroup, cameraX, cameraY);
+      break;
+    case TIME_MORNING:
+      if (objectEventTemplate->timeVisibility & TIME_MORNING_FLAG)
+        TrySpawnObjectEventTemplate(objectEventTemplate, mapNum, mapGroup, cameraX, cameraY);
+      break;
+      case TIME_LATE_MORNING:
+      if (objectEventTemplate->timeVisibility & TIME_LATE_MORNING_FLAG)
+        TrySpawnObjectEventTemplate(objectEventTemplate, mapNum, mapGroup, cameraX, cameraY);
+      break;
+    case TIME_MIDDAY:
+      if (objectEventTemplate->timeVisibility & TIME_MIDDAY_FLAG)
+        TrySpawnObjectEventTemplate(objectEventTemplate, mapNum, mapGroup, cameraX, cameraY);
+      break;
+    case TIME_AFTERNOON:
+      if (objectEventTemplate->timeVisibility & TIME_AFTERNOON_FLAG)
+        TrySpawnObjectEventTemplate(objectEventTemplate, mapNum, mapGroup, cameraX, cameraY);
+      break;
+    case TIME_EVENING:
+      if (objectEventTemplate->timeVisibility & TIME_EVENING_FLAG)
+        TrySpawnObjectEventTemplate(objectEventTemplate, mapNum, mapGroup, cameraX, cameraY);
+      break;
+    case TIME_NIGHT:
+      if (objectEventTemplate->timeVisibility & TIME_NIGHT_FLAG)
+        TrySpawnObjectEventTemplate(objectEventTemplate, mapNum, mapGroup, cameraX, cameraY);
+      break;
+  }
+}
+
 u8 SpawnSpecialObjectEvent(struct ObjectEventTemplate *objectEventTemplate)
 {
     s16 cameraX;
@@ -2357,7 +2397,7 @@ bool32 CheckMsgCondition(const struct MsgCondition *cond, struct Pokemon *mon, u
         // Must match time of day, have natural light on the map,
         // and not have weather that obscures the sky
         u32 weather = GetCurrentWeather();
-        return (cond->data.raw == gTimeOfDay
+        return (cond->data.raw == GetTimeOfDay(MODE_GENERIC)
             && MapHasNaturalLight(gMapHeader.mapType)
             && (weather == WEATHER_NONE || weather == WEATHER_SUNNY_CLOUDS || weather == WEATHER_SUNNY));
     }
@@ -2606,7 +2646,7 @@ void UpdateLightSprite(struct Sprite *sprite)
         return;
     }
 
-    if (gTimeOfDay != TIME_NIGHT)
+    if (GetTimeOfDay(MODE_GENERIC) != TIME_NIGHT)
     {
         sprite->invisible = TRUE;
         return;
@@ -2749,16 +2789,21 @@ void TrySpawnObjectEvents(s16 cameraX, s16 cameraY)
         else
             objectCount = gMapHeader.events->objectEventCount;
 
+        enum TimeOfDay timeOfDay = GetTimeOfDay(MODE_GRANULAR);
+
         for (i = 0; i < objectCount; i++)
         {
             struct ObjectEventTemplate *template = &gSaveBlock1Ptr->objectEventTemplates[i];
             s16 npcX = template->x + MAP_OFFSET;
             s16 npcY = template->y + MAP_OFFSET;
 
-            if (top <= npcY && bottom >= npcY && left <= npcX && right >= npcX && !FlagGet(template->flagId))
+            if (FlagGet(template->flagId))
+                break;
+
+            if (top <= npcY && bottom >= npcY && left <= npcX && right >= npcX)
             {
-                if (template->graphicsId == OBJ_EVENT_GFX_LIGHT_SPRITE)
-                    SpawnLightSprite(npcX, npcY, cameraX, cameraY, template->trainerRange_berryTreeId); // light sprite instead
+                if (template->timeVisibility != 0)
+                    TrySpawnObjectEventTemplateBasedOnSchedule(template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, cameraX, cameraY, timeOfDay);
                 else
                     TrySpawnObjectEventTemplate(template, gSaveBlock1Ptr->location.mapNum, gSaveBlock1Ptr->location.mapGroup, cameraX, cameraY);
             }

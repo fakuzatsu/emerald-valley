@@ -905,7 +905,13 @@ bool8 ScrCmd_gettime(struct ScriptContext *ctx)
 
 bool8 ScrCmd_gettimeofday(struct ScriptContext *ctx)
 {
-    gSpecialVar_0x8000 = GetTimeOfDay();
+    gSpecialVar_0x8000 = GetTimeOfDay(MODE_GRANULAR);
+    return FALSE;
+}
+
+bool8 ScrCmd_getgenerictimeofday(struct ScriptContext *ctx)
+{
+    gSpecialVar_0x8000 = GetTimeOfDay(MODE_GENERIC);
     return FALSE;
 }
 

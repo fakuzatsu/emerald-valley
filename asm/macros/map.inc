@@ -20,7 +20,7 @@
 	.endm
 
 	@ Defines an object event template for map data, to be used by a normal object. Mirrors the struct layout of ObjectEventTemplate in include/global.fieldmap.h
-	.macro object_event index:req, gfx:req, x:req, y:req, elevation:req, movement_type:req, x_radius:req, y_radius:req, trainer_type:req, sight_radius_tree_etc:req, script:req, event_flag:req
+	.macro object_event index:req, gfx:req, x:req, y:req, elevation:req, movement_type:req, x_radius:req, y_radius:req, trainer_type:req, sight_radius_tree_etc:req, script:req, event_flag:req, afternoon:req, earlymorning:req, evening:req, latemorning:req, midday:req, midnight:req, morning:req, night:req
 	.byte \index
 	.2byte \gfx
 	.byte OBJ_KIND_NORMAL
@@ -32,6 +32,16 @@
 		.error "movementRangeX has a bitfield of 4 bytes, so values over 15 will overflow. Use a custom script for item balls that should give the player more than 15 items."
 	.endif
 	.byte ((\y_radius << 4) | \x_radius)
+    .set time_visibility, 0
+    .if \midnight; .set time_visibility, time_visibility | (1 << 0); .endif
+	.if \earlymorning; .set time_visibility, time_visibility | (1 << 1); .endif
+	.if \morning; .set time_visibility, time_visibility | (1 << 2); .endif
+    .if \latemorning; .set time_visibility, time_visibility | (1 << 3); .endif
+	.if \midday; .set time_visibility, time_visibility | (1 << 4); .endif
+	.if \afternoon; .set time_visibility, time_visibility | (1 << 5); .endif
+	.if \evening; .set time_visibility, time_visibility | (1 << 6); .endif
+	.if \night; .set time_visibility, time_visibility | (1 << 7); .endif
+	.byte time_visibility
 	.space 1  @ Padding
 	.2byte \trainer_type
 	.2byte \sight_radius_tree_etc

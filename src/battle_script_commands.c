@@ -16029,7 +16029,7 @@ static void Cmd_handleballthrow(void)
                     ballMultiplier = 400;
                 break;
             case BALL_DUSK:
-                i = GetTimeOfDay();
+                i = GetTimeOfDay(MODE_GENERIC);
                 if (i == TIME_EVENING || i == TIME_NIGHT || gMapHeader.cave || gMapHeader.mapType == MAP_TYPE_UNDERGROUND)
                     ballMultiplier = (B_DUSK_BALL_MODIFIER >= GEN_7 ? 300 : 350);
                 break;
