@@ -124,7 +124,7 @@ enum TimeMenuTimeOfDay
     DEBUG_TIME_MENU_ITEM_MIDDAY,
     DEBUG_TIME_MENU_ITEM_AFTERNOON,
     DEBUG_TIME_MENU_ITEM_EVENING,
-    DEBUG_TIME_MENU_ITEM_NIGHT, 
+    DEBUG_TIME_MENU_ITEM_NIGHT,
 };
 
 enum TimeMenuWeekdays
@@ -341,7 +341,7 @@ static EWRAM_DATA struct DebugMonData *sDebugMonData = NULL;
 static EWRAM_DATA struct DebugMenuListData *sDebugMenuListData = NULL;
 static EWRAM_DATA struct DebugBattleData *sDebugBattleData = NULL;
 EWRAM_DATA bool8 gIsDebugBattle = FALSE;
-EWRAM_DATA u32 gDebugAIFlags = 0;
+EWRAM_DATA u64 gDebugAIFlags = 0;
 
 // *******************************
 // Define functions
@@ -1783,7 +1783,7 @@ static void Debug_InitializeBattle(u8 taskId)
     }
 
     // Set terrain
-    gBattleTerrain = sDebugBattleData->battleTerrain;
+    gBattleEnvironment = sDebugBattleData->battleTerrain;
 
     // Populate enemy party
     for (i = 0; i < PARTY_SIZE; i++)
@@ -3804,7 +3804,7 @@ static void DebugAction_Give_DayCareEgg(u8 taskId)
 static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId)
 {
     u32 input = ListMenu_ProcessInput(gTasks[taskId].tMenuTaskId);
-    
+
     DebugAction_DestroyExtraWindow(taskId);
     switch (input)
     {
@@ -3848,7 +3848,7 @@ static void DebugAction_TimeMenu_ChangeWeekdays(u8 taskId)
     {
         case DEBUG_TIME_MENU_ITEM_SUNDAY:
             daysToAdd = ((WEEKDAY_SUN - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;
-            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);    
+            FakeRtc_AdvanceTimeBy(daysToAdd, 0, 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_MONDAY:
             daysToAdd = ((WEEKDAY_MON - rtc->dayOfWeek) + WEEKDAY_COUNT) % WEEKDAY_COUNT;

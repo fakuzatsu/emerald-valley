@@ -341,7 +341,7 @@
 	@ Sets the values of variable VAR_0x8000 to the time of day according to those found in rtc.h.
 	@ 0 = TIME_MIDNIGHT, 1 = TIME_EARLY_MORNING, 2 = TIME_MORNING, 3 = TIME_LATE_MORNING, 4 = TIME_MIDDAY, 5 = TIME_AFTERNOON, 6 = TIME_EVENING, 7 = TIME_NIGHT,
 	.macro gettimeofday
-	callnative ScrCmd_gettimeofday
+	callnative ScrCmd_gettimeofday, requests_effects=1
 	.endm
 
     @ Sets the values of variable VAR_0x8000 to the generic time of day based on light level.
@@ -2314,7 +2314,11 @@
 	callnative ScriptSetDoubleBattleFlag, requests_effects=1
 	.endm
 
-	@ When OW_USE_FAKE_RTC and OW_FLAG_PAUSE_TIME is assigned, this macro will stop the flow of time.
+	@ ============================ @
+	@ FAKE RTC MACROS
+	@ Will only function if OW_USE_FAKE_RTC is true. If it has any additional requirements, it will be listed accordingly.
+	
+	@ When OW_USE_FAKE_RTC is true and OW_FLAG_PAUSE_TIME is assigned, this macro will stop the flow of time.
 	.macro pausefakertc
 	callnative Script_PauseFakeRtc, requests_effects=1
 	.endm
@@ -2327,6 +2331,46 @@
 	@ When OW_USE_FAKE_RTC and OW_FLAG_PAUSE_TIME is assigned, this macro will resume the flow of time if paused, and stop the flow of time otherwise.
 	.macro togglefakertc
 	callnative Script_ToggleFakeRtc, requests_effects=1
+	.endm
+
+	@ When OW_USE_FAKE_RTC is true, adds a specified amount of time.
+	.macro addtime days:req, hours:req, minutes:req
+	callnative ScrCmd_addtime, requests_effects=1
+	.4byte \days
+	.4byte \hours
+	.4byte \minutes
+	.endm
+
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days to the time. 
+	.macro adddays days:req
+	callnative ScrCmd_adddays, requests_effects=1
+	.4byte \days
+	.endm
+
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days, hours, and minutes to the time. 
+	.macro addhours hours:req
+	callnative ScrCmd_addhours, requests_effects=1
+	.4byte \hours
+	.endm
+
+	@ When OW_USE_FAKE_RTC is true, adds a specified number of days, hours, and minutes to the time. 
+	.macro addminutes minutes:req
+	callnative ScrCmd_addminutes, requests_effects=1
+	.4byte \minutes
+	.endm
+
+	@ Forwards the time to a specified hour and minute. 
+	@ This causes the time to go to the next day if the time has already been past. 
+	.macro fwdtime hours:req, minutes:req
+	callnative ScrCmd_fwdtime, requests_effects=1
+	.4byte \hours
+	.4byte \minutes
+	.endm
+
+	@ Forwards the time to a specified day of the week. Uses a 0-index starting from Sunday.
+	.macro fwdweekday weekday:req
+	callnative ScrCmd_fwdweekday, requests_effects=1
+	.4byte \weekday
 	.endm
 
 	@ ============================ @
@@ -2531,8 +2575,8 @@
 	@ Sets an NPC up to follow the player.
 	@ Follower flags are defined in include/constants/follower_npc.h
 	@ If you want to specify a battle partner without specifying a custom script, you can set the script parameter to 0.
-	.macro setfollower localId:req, flags:req, script=0, battlePartner=0
-	checkfollower
+	.macro setfollowernpc localId:req, flags:req, script=0, battlePartner=0
+	checkfollowernpc
 	goto_if_eq VAR_RESULT, TRUE, 1f
 	hidefollower
 	delay 16
@@ -2552,12 +2596,12 @@
 	.endm
 
 	@ Remove the follower NPC (assumes there will only ever be one).
-	.macro destroyfollower
+	.macro destroyfollowernpc
 	callnative ScriptDestroyFollowerNPC
 	.endm
 
 	@ Makes the player and follower NPC face one another.
-	.macro facefollower
+	.macro facefollowernpc
 	callnative ScriptFaceFollowerNPC
 	.endm
 
@@ -2575,7 +2619,7 @@
 	.endm
 
 	@ Checks if you have a follower NPC. Returns the result to VAR_RESULT.
-	.macro checkfollower
+	.macro checkfollowernpc
 	callnative ScriptCheckFollowerNPC
 	.endm
 
