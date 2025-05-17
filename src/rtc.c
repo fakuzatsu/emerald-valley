@@ -38,6 +38,18 @@ const s32 sNumDaysInMonths[MONTH_COUNT] =
     [MONTH_DEC - 1] = 31,
 };
 
+const u8 gSeasonalTimeOfDay[SEASONS_COUNT][TIMES_OF_DAY_COUNT] =
+{
+    // Spring
+    { 0, 3, 6, 9, 12, 15, 18, 21 },
+    // Summer
+    { 0, 3, 5, 8, 12, 16, 19, 22 },
+    // Autumn
+    { 0, 3, 6, 9, 12, 15, 18, 21 },
+    // Winter
+    { 0, 3, 7, 10, 12, 14, 17, 20 },
+};
+
 void RtcDisableInterrupts(void)
 {
     sSavedIme = REG_IME;
@@ -324,6 +336,16 @@ bool8 IsBetweenHours(s32 hours, s32 begin, s32 end)
         return hours >= begin || hours < end;
     else
         return hours >= begin && hours < end;
+}
+
+enum TimeOfDay GetTimeBracketBySeason(enum Seasons season, s32 hours)
+{
+    for (int i = TIMES_OF_DAY_COUNT - 1; i >= 0; i--)
+    {
+        if (hours >= gSeasonalTimeOfDay[season][i])
+            return (enum TimeOfDay)i;
+    }
+    return TIME_MIDNIGHT;
 }
 
 enum TimeOfDay GetTimeOfDay(enum TimeOfDayMode mode)

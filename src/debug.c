@@ -3809,28 +3809,28 @@ static void DebugAction_TimeMenu_ChangeTimeOfDay(u8 taskId)
     switch (input)
     {
         case DEBUG_TIME_MENU_ITEM_MIDNIGHT:
-            FakeRtc_ForwardTimeTo(MIDNIGHT_HOUR_BEGIN, 0, 0);
+            FakeRtc_ForwardTimeTo(gSeasonalTimeOfDay[SEASON_SPRING][TIME_MIDNIGHT], 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_EARLY_MORNING:
-            FakeRtc_ForwardTimeTo(EARLY_MORNING_HOUR_BEGIN, 0, 0);
+            FakeRtc_ForwardTimeTo(gSeasonalTimeOfDay[SEASON_SPRING][TIME_EARLY_MORNING], 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_MORNING:
-            FakeRtc_ForwardTimeTo(MORNING_HOUR_BEGIN, 0, 0);
+            FakeRtc_ForwardTimeTo(gSeasonalTimeOfDay[SEASON_SPRING][TIME_MORNING], 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_LATE_MORNING:
-            FakeRtc_ForwardTimeTo(LATE_MORNING_HOUR_BEGIN, 0, 0);
+            FakeRtc_ForwardTimeTo(gSeasonalTimeOfDay[SEASON_SPRING][TIME_LATE_MORNING], 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_MIDDAY:
-            FakeRtc_ForwardTimeTo(MIDDAY_HOUR_BEGIN, 0, 0);
+            FakeRtc_ForwardTimeTo(gSeasonalTimeOfDay[SEASON_SPRING][TIME_MIDDAY], 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_AFTERNOON:
-            FakeRtc_ForwardTimeTo(AFTERNOON_HOUR_BEGIN, 0, 0);
+            FakeRtc_ForwardTimeTo(gSeasonalTimeOfDay[SEASON_SPRING][TIME_AFTERNOON], 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_EVENING:
-            FakeRtc_ForwardTimeTo(EVENING_HOUR_BEGIN, 0, 0);
+            FakeRtc_ForwardTimeTo(gSeasonalTimeOfDay[SEASON_SPRING][TIME_EVENING], 0, 0);
             break;
         case DEBUG_TIME_MENU_ITEM_NIGHT:
-            FakeRtc_ForwardTimeTo(NIGHT_HOUR_BEGIN, 0, 0);
+            FakeRtc_ForwardTimeTo(gSeasonalTimeOfDay[SEASON_SPRING][TIME_NIGHT], 0, 0);
             break;
     }
     Debug_DestroyMenu_Full(taskId);
