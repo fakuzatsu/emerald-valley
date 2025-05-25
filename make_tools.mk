@@ -5,30 +5,18 @@ MAKEFLAGS += --no-print-directory
 
 # Inclusive list. If you don't want a tool to be built, don't add it here.
 TOOLS_DIR := tools
-TOOL_NAMES := aif2pcm bin2c gbafix gbagfx jsonproc mapjson mid2agb preproc ramscrgen rsfont scaninc trainerproc
+TOOL_NAMES := aif2pcm bin2c gbafix gbagfx jsonproc mapjson mid2agb preproc ramscrgen rsfont scaninc trainerproc poryscript
 CHECK_TOOL_NAMES = patchelf mgba-rom-test-hydra
-TOOL_PORY := poryscript
 
 TOOLDIRS := $(TOOL_NAMES:%=$(TOOLS_DIR)/%)
 CHECKTOOLDIRS := $(CHECK_TOOL_NAMES:%=$(TOOLS_DIR)/%)
-PORYDIR := $(TOOL_PORY:%=$(TOOLS_DIR)/%)
 
-# Check if Go is installed
-GO_AVAILABLE := $(shell command -v go >/dev/null 2>&1 && echo 1 || echo 0)
-
-# Tool making doesn't require a pokeemerald dependency scan.
+# Tool making doesnt require a pokeemerald dependency scan.
 RULES_NO_SCAN += tools check-tools clean-tools clean-check-tools $(TOOLDIRS) $(CHECKTOOLDIRS)
-
-# Only add poryscript if Go is available
-ifneq ($(NO_PORY),1)
-  ifeq ($(GO_AVAILABLE),1)
-    RULES_NO_SCAN += $(PORYDIR)
-  endif
-endif
 
 .PHONY: $(RULES_NO_SCAN)
 
-tools: $(TOOLDIRS) $(if $(and $(filter 1,$(GO_AVAILABLE)),$(filter 0,$(NO_PORY))),$(PORYDIR))
+tools: $(TOOLDIRS)
 
 check-tools: $(CHECKTOOLDIRS)
 
@@ -38,13 +26,8 @@ $(TOOLDIRS):
 $(CHECKTOOLDIRS):
 	@$(MAKE) -C $@
 
-$(PORYDIR):
-	@echo "Building poryscript..."
-	@cd $(PORYDIR) && go build -o poryscript
-
 clean-tools:
 	@$(foreach tooldir,$(TOOLDIRS),$(MAKE) clean -C $(tooldir);)
-	rm -f $(PORYDIR)/poryscript
 
 clean-check-tools:
 	@$(foreach tooldir,$(CHECKTOOLDIRS),$(MAKE) clean -C $(tooldir);)

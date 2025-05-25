@@ -19,8 +19,6 @@ ANALYZE      ?= 0
 UNUSED_ERROR ?= 0
 # Adds -Og and -g flags, which optimize the build for debugging and include debug info respectively
 DEBUG        ?= 0
-# Prevent Poryscript from being built when the testrunner builds the rom
-NO_PORY		 ?= 0
 
 ifeq (compare,$(MAKECMDGOALS))
   COMPARE := 1
@@ -348,17 +346,6 @@ include map_data_rules.mk
 include spritesheet_rules.mk
 include json_data_rules.mk
 include audio_rules.mk
-
-# Only add these if the tools are available
-ifneq ($(NO_PORY),1)
-  ifeq ($(SCRIPT_EXISTS),1)
-    AUTO_GEN_TARGETS += $(patsubst %.pory,%.inc,$(shell find data/ -type f -name '*.pory'))
-  endif
-
-  ifeq ($(TILES_EXISTS),1)
-    AUTO_GEN_TARGETS += $(patsubst %/porytiles,%,$(shell find data/tilesets/primary -type d -name 'porytiles'))
-  endif
-endif
 
 # NOTE: Tools must have been built prior (FIXME)
 # so you can't really call this rule directly
