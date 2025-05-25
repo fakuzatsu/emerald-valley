@@ -30,6 +30,11 @@ ifeq (debug,$(MAKECMDGOALS))
   DEBUG := 1
 endif
 
+# Set up submodules
+ifneq ($(shell bash init_submodules.sh),)
+$(info "Setting up submodules" )
+endif
+
 # Default make rule
 all: rom
 
