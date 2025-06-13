@@ -125,7 +125,7 @@ void SetControllerToWally(u32 battler)
 
 static void WallyBufferRunCommand(u32 battler)
 {
-    if (gBattleControllerExecFlags & (1u << battler))
+    if (IsBattleControllerActiveOnLocal(battler))
     {
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sWallyBufferCommands))
             sWallyBufferCommands[gBattleResources->bufferA[battler][0]](battler);
@@ -284,7 +284,7 @@ static void WallyBufferExecCompleted(u32 battler)
     }
     else
     {
-        gBattleControllerExecFlags &= ~(1u << battler);
+        MarkBattleControllerIdleOnLocal(battler);
     }
 }
 
@@ -378,7 +378,7 @@ static void WallyHandleChooseMove(u32 battler)
         if (--gBattleStruct->wallyMoveFrames == 0)
         {
             PlaySE(SE_SELECT);
-            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, 0x100);
+            BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, 0x100);
             WallyBufferExecCompleted(battler);
         }
         break;

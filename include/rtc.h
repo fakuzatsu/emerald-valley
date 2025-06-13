@@ -62,7 +62,7 @@ extern const u8 gSeasonalTimeOfDay[SEASONS_COUNT][TIMES_OF_DAY_COUNT];
 #define TIME_OF_DAY_DEFAULT    0
 
 extern struct Time gLocalTime;
-extern const s32 sNumDaysInMonths[12];
+extern const s32 sNumDaysInMonths[MONTH_COUNT];
 
 void RtcDisableInterrupts(void);
 void RtcRestoreInterrupts(void);

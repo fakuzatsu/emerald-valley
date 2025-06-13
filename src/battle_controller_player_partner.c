@@ -117,7 +117,7 @@ void SetControllerToPlayerPartner(u32 battler)
 
 static void PlayerPartnerBufferRunCommand(u32 battler)
 {
-    if (gBattleControllerExecFlags & (1u << battler))
+    if (IsBattleControllerActiveOnLocal(battler))
     {
         if (gBattleResources->bufferA[battler][0] < ARRAY_COUNT(sPlayerPartnerBufferCommands))
             sPlayerPartnerBufferCommands[gBattleResources->bufferA[battler][0]](battler);
@@ -236,7 +236,7 @@ static void PlayerPartnerBufferExecCompleted(u32 battler)
     }
     else
     {
-        gBattleControllerExecFlags &= ~(1u << battler);
+        MarkBattleControllerIdleOnLocal(battler);
     }
 }
 
@@ -328,15 +328,13 @@ static void PlayerPartnerHandleChooseMove(u32 battler)
             gBattlerTarget = GetBattlerAtPosition(B_POSITION_OPPONENT_RIGHT);
     }
     // If partner can and should use a gimmick (considering trainer data), do it
-    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE
-        && !(gBattleStruct->gimmick.usableGimmick[battler] == GIMMICK_Z_MOVE
-        && !ShouldUseZMove(battler, gBattlerTarget, moveInfo->moves[chosenMoveIndex])))
+    if (gBattleStruct->gimmick.usableGimmick[battler] != GIMMICK_NONE && IsAIUsingGimmick(battler))
     {
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveIndex) | (RET_GIMMICK) | (gBattlerTarget << 8));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (RET_GIMMICK) | (gBattlerTarget << 8));
     }
     else
     {
-        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, 10, (chosenMoveIndex) | (gBattlerTarget << 8));
+        BtlController_EmitTwoReturnValues(battler, B_COMM_TO_ENGINE, B_ACTION_EXEC_SCRIPT, (chosenMoveIndex) | (gBattlerTarget << 8));
     }
 
     PlayerPartnerBufferExecCompleted(battler);
