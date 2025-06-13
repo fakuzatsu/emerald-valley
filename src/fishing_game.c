@@ -598,7 +598,7 @@ void Task_InitOWMinigame(u8 taskId)
     void *tilemapBuffer;
     
     tilemapBuffer = AllocZeroed(GetDecompressedDataSize(gFishingGameOWBG_Gfx));
-    LZDecompressWram(gFishingGameOWBG_Gfx, tilemapBuffer);
+    DecompressDataWithHeaderWram(gFishingGameOWBG_Gfx, tilemapBuffer);
     CopyToBgTilemapBuffer(0, gFishingGameOWBG_Tilemap, 0, 0);
     CopyBgTilemapBufferToVram(0);
     LoadPalette(gFishingGameOWBG_Pal, BG_PLTT_ID(13), PLTT_SIZE_4BPP);

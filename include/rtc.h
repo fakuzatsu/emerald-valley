@@ -4,20 +4,7 @@
 #include "global.h"
 #include "siirtc.h"
 #include "config/overworld.h"
-
-#define RTC_INIT_ERROR         0x0001
-#define RTC_INIT_WARNING       0x0002
-
-#define RTC_ERR_12HOUR_CLOCK   0x0010
-#define RTC_ERR_POWER_FAILURE  0x0020
-#define RTC_ERR_INVALID_YEAR   0x0040
-#define RTC_ERR_INVALID_MONTH  0x0080
-#define RTC_ERR_INVALID_DAY    0x0100
-#define RTC_ERR_INVALID_HOUR   0x0200
-#define RTC_ERR_INVALID_MINUTE 0x0400
-#define RTC_ERR_INVALID_SECOND 0x0800
-
-#define RTC_ERR_FLAG_MASK      0x0FF0
+#include "constants/rtc.h"
 
 #define TIME_MIDNIGHT_FLAG      (1 << 0)
 #define TIME_EARLY_MORNING_FLAG (1 << 1)
@@ -28,38 +15,7 @@
 #define TIME_EVENING_FLAG       (1 << 6)
 #define TIME_NIGHT_FLAG         (1 << 7)
 
-// TIMES_OF_DAY_COUNT must be last
-enum TimeOfDay 
-{
-    TIME_MIDNIGHT,
-    TIME_EARLY_MORNING,
-    TIME_MORNING,
-    TIME_LATE_MORNING,
-    TIME_MIDDAY,
-    TIME_AFTERNOON,
-    TIME_EVENING,
-    TIME_NIGHT,
-    TIMES_OF_DAY_COUNT,
-};
-
-enum TimeOfDayMode 
-{
-    MODE_GRANULAR,
-    MODE_GENERIC,
-};
-
-enum Seasons
-{
-    SEASON_SPRING,
-    SEASON_SUMMER,
-    SEASON_AUTUMN,
-    SEASON_WINTER,
-    SEASONS_COUNT,
-};
-
 extern const u8 gSeasonalTimeOfDay[SEASONS_COUNT][TIMES_OF_DAY_COUNT];
-
-#define TIME_OF_DAY_DEFAULT    0
 
 extern struct Time gLocalTime;
 extern const s32 sNumDaysInMonths[MONTH_COUNT];
