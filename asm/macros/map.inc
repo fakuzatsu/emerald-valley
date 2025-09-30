@@ -42,7 +42,6 @@
 	.if \evening; .set time_visibility, time_visibility | (1 << 6); .endif
 	.if \night; .set time_visibility, time_visibility | (1 << 7); .endif
 	.byte time_visibility
-	.space 1  @ Padding
 	.2byte \trainer_type
 	.2byte \sight_radius_tree_etc
 	.4byte \script
