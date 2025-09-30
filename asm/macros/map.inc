@@ -20,7 +20,7 @@
 	.endm
 
 	@ Defines an object event template for map data, to be used by a normal object. Mirrors the struct layout of ObjectEventTemplate in include/global.fieldmap.h
-	.macro object_event index:req, gfx:req, x:req, y:req, elevation:req, movement_type:req, x_radius:req, y_radius:req, trainer_type:req, sight_radius_tree_etc:req, script:req, event_flag:req, afternoon:req, earlymorning:req, evening:req, latemorning:req, midday:req, midnight:req, morning:req, night:req
+	.macro object_event index:req, gfx:req, x:req, y:req, elevation:req, movement_type:req, x_radius:req, y_radius:req, trainer_type:req, sight_radius_tree_etc:req, script:req, event_flag:req, afternoon=0, earlymorning=0, evening=0, latemorning=0, midday=0, midnight=0, morning=0, night=0
 	.byte \index
 	.2byte \gfx
 	.byte OBJ_KIND_NORMAL
