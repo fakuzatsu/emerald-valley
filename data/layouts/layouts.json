@@ -4430,6 +4430,16 @@
       "secondary_tileset": "gTileset_Petalburg",
       "border_filepath": "data/layouts/EmeraldValleyPathway/border.bin",
       "blockdata_filepath": "data/layouts/EmeraldValleyPathway/map.bin"
+    },
+    {
+      "id": "LAYOUT_EMERALD_VALLEY_TOWN",
+      "name": "EmeraldValleyTown_Layout",
+      "width": 20,
+      "height": 20,
+      "primary_tileset": "gTileset_ValleySpring",
+      "secondary_tileset": "gTileset_Petalburg",
+      "border_filepath": "data/layouts/EmeraldValleyTown/border.bin",
+      "blockdata_filepath": "data/layouts/EmeraldValleyTown/map.bin"
     }
   ]
 }

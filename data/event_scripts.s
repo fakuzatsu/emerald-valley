@@ -1165,3 +1165,4 @@ EventScript_VsSeekerChargingDone::
 
 	.include "data/maps/EmeraldValleyFarm/scripts.inc"
 	.include "data/maps/EmeraldValleyPathway/scripts.inc"
+	.include "data/maps/EmeraldValleyTown/scripts.inc"
