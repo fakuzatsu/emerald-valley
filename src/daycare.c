@@ -24,7 +24,6 @@
 #include "regions.h"
 #include "constants/form_change_types.h"
 #include "constants/items.h"
-#include "constants/hold_effects.h"
 #include "constants/moves.h"
 #include "constants/region_map_sections.h"
 
@@ -505,6 +504,8 @@ static u16 GetEggSpecies(u16 species)
         found = FALSE;
         for (j = 1; j < NUM_SPECIES; j++)
         {
+            if (!IsSpeciesEnabled(j))
+                continue;
             const struct Evolution *evolutions = GetSpeciesEvolutions(j);
             if (evolutions == NULL)
                 continue;
@@ -1107,7 +1108,7 @@ void CreateEgg(struct Pokemon *mon, u16 species, bool8 setHotSpringsLocation)
     u8 metLevel;
     enum PokeBall ball;
     u8 language;
-    u8 metLocation;
+    metloc_u8_t metLocation;
     u8 isEgg;
 
     CreateMon(mon, species, EGG_HATCH_LEVEL, USE_RANDOM_IVS, FALSE, 0, OT_ID_PLAYER_ID, 0);

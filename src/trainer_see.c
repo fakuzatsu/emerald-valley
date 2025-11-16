@@ -19,6 +19,7 @@
 #include "constants/event_objects.h"
 #include "constants/event_object_movement.h"
 #include "constants/field_effects.h"
+#include "constants/script_commands.h"
 #include "constants/trainer_types.h"
 
 // this file's functions
@@ -399,6 +400,7 @@ bool8 CheckForTrainersWantingBattle(void)
         if (numTrainers == 0xFF) // non-trainerbattle script
         {
             u32 objectEventId = gApproachingTrainers[gNoOfApproachingTrainers - 1].objectEventId;
+            gApproachingTrainers[gNoOfApproachingTrainers - 1].trainerScriptPtr = GetObjectEventScriptPointerByObjectEventId(objectEventId);
             gSelectedObjectEvent = objectEventId;
             gSpecialVar_LastTalked = gObjectEvents[objectEventId].localId;
             ScriptContext_SetupScript(EventScript_ObjectApproachPlayer);
@@ -448,7 +450,7 @@ bool8 CheckForTrainersWantingBattle(void)
 
 static u8 CheckTrainer(u8 objectEventId)
 {
-    const u8 *scriptPtr, *trainerBattlePtr;
+    const u8 *trainerBattlePtr;
     u8 numTrainers = 1;
 
     u8 approachDistance = GetTrainerApproachDistance(&gObjectEvents[objectEventId]);
@@ -457,15 +459,15 @@ static u8 CheckTrainer(u8 objectEventId)
 
     if (InTrainerHill() == TRUE)
     {
-        trainerBattlePtr = scriptPtr = GetTrainerHillTrainerScript();
+        trainerBattlePtr = GetTrainerHillTrainerScript();
     }
     else
     {
-        trainerBattlePtr = scriptPtr = GetObjectEventScriptPointerByObjectEventId(objectEventId);
+        trainerBattlePtr = GetObjectEventScriptPointerByObjectEventId(objectEventId);
         struct ScriptContext ctx;
-        if (RunScriptImmediatelyUntilEffect(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE | SCREFF_TRAINERBATTLE, scriptPtr, &ctx))
+        if (RunScriptImmediatelyUntilEffect(SCREFF_V1 | SCREFF_SAVE | SCREFF_HARDWARE | SCREFF_TRAINERBATTLE, trainerBattlePtr, &ctx))
         {
-            if (*ctx.scriptPtr == 0x5c) // trainerbattle
+            if (*ctx.scriptPtr == SCR_OP_TRAINERBATTLE)
                 trainerBattlePtr = ctx.scriptPtr;
             else
                 trainerBattlePtr = NULL;
@@ -489,7 +491,18 @@ static u8 CheckTrainer(u8 objectEventId)
     else if (trainerBattlePtr)
     {
         if (GetTrainerFlagFromScriptPointer(trainerBattlePtr))
-            return 0;
+        {
+            //If there is a rematch, we want to trigger the approach sequence
+            if (GetRematchFromScriptPointer(trainerBattlePtr))
+            {
+                trainerBattlePtr = NULL;
+                numTrainers = 0xFF;
+            }
+            else
+            {
+                 return 0;
+            }
+        }
     }
     else
     {
@@ -511,7 +524,7 @@ static u8 CheckTrainer(u8 objectEventId)
     }
 
     gApproachingTrainers[gNoOfApproachingTrainers].objectEventId = objectEventId;
-    gApproachingTrainers[gNoOfApproachingTrainers].trainerScriptPtr = scriptPtr;
+    gApproachingTrainers[gNoOfApproachingTrainers].trainerScriptPtr = trainerBattlePtr;
     gApproachingTrainers[gNoOfApproachingTrainers].radius = approachDistance;
     InitTrainerApproachTask(&gObjectEvents[objectEventId], approachDistance - 1);
     gNoOfApproachingTrainers++;
@@ -970,13 +983,17 @@ u8 FldEff_HeartIcon(void)
     return 0;
 }
 
-
 u8 FldEff_DoubleExclMarkIcon(void)
 {
     u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x53);
 
     if (spriteId != MAX_SPRITES)
-        SetIconSpriteData(&gSprites[spriteId], FLDEFF_EXCLAMATION_MARK_ICON, 2);
+    {
+        struct Sprite *sprite = &gSprites[spriteId];
+
+        SetIconSpriteData(sprite, FLDEFF_DOUBLE_EXCL_MARK_ICON, 2);
+        UpdateSpritePaletteByTemplate(&sSpriteTemplate_ExclamationQuestionMark, sprite);
+    }
 
     return 0;
 }
@@ -986,7 +1003,12 @@ u8 FldEff_XIcon(void)
     u8 spriteId = CreateSpriteAtEnd(&sSpriteTemplate_ExclamationQuestionMark, 0, 0, 0x53);
 
     if (spriteId != MAX_SPRITES)
-        SetIconSpriteData(&gSprites[spriteId], FLDEFF_EXCLAMATION_MARK_ICON, 3);
+    {
+        struct Sprite *sprite = &gSprites[spriteId];
+
+        SetIconSpriteData(sprite, FLDEFF_X_ICON, 3);
+        UpdateSpritePaletteByTemplate(&sSpriteTemplate_ExclamationQuestionMark, sprite);
+    }
 
     return 0;
 }
