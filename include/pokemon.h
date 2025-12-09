@@ -6,6 +6,7 @@
 #include "constants/battle.h"
 #include "constants/cries.h"
 #include "constants/form_change_types.h"
+#include "constants/hold_effects.h"
 #include "constants/items.h"
 #include "constants/map_groups.h"
 #include "constants/regions.h"
@@ -352,6 +353,7 @@ struct Volatiles
     // u32 foresight:1;
     // u32 dragonCheer:1;
     // u32 focusEnergy:1;
+    // u32 bonusCritStages:3;
 };
 
 struct BattlePokemon
@@ -829,6 +831,7 @@ s32 GetBattlerMultiplayerId(u16 id);
 u8 GetTrainerEncounterMusicId(u16 trainerOpponentId);
 u16 ModifyStatByNature(u8 nature, u16 stat, enum Stat statIndex);
 void AdjustFriendship(struct Pokemon *mon, u8 event);
+u8 CalculateFriendshipBonuses(struct Pokemon *mon, u32 modifier, enum HoldEffect itemHoldEffect);
 void MonGainEVs(struct Pokemon *mon, u16 defeatedSpecies);
 u16 GetMonEVCount(struct Pokemon *mon);
 void RandomlyGivePartyPokerus(struct Pokemon *party);
@@ -847,6 +850,7 @@ u8 GetNumberOfEggMoves(struct Pokemon *mon);
 u8 GetNumberOfTMMoves(struct Pokemon *mon);
 u8 GetNumberOfTutorMoves(struct Pokemon *mon);
 u8 GetLevelUpMovesBySpecies(u16 species, u16 *moves);
+u8 GetNumberOfRelearnableMoves(struct Pokemon *mon);
 u16 SpeciesToPokedexNum(u16 species);
 bool32 IsSpeciesInHoennDex(u16 species);
 u16 GetBattleBGM(void);
