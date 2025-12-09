@@ -41,11 +41,7 @@ SINGLE_BATTLE_TEST("Dire Claw cannot poison/paralyze poison/electric types respe
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PRZ; rng = MOVE_EFFECT_PARALYSIS; species = SPECIES_RAICHU; }
     PARAMETRIZE { statusAnim = B_ANIM_STATUS_PSN; rng = MOVE_EFFECT_POISON; species = SPECIES_ARBOK; }
     GIVEN {
-<<<<<<< HEAD
-        WITH_CONFIG(GEN_CONFIG_PARALYZE_ELECTRIC, GEN_6);
-=======
         WITH_CONFIG(CONFIG_PARALYZE_ELECTRIC, GEN_6);
->>>>>>> be8224a0ff8e85ca6454db27fde5425ec46b3f22
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(species);
     } WHEN {

@@ -24,10 +24,6 @@ SINGLE_BATTLE_TEST("Recharge moves make the user unable to attack for exactly on
 
 SINGLE_BATTLE_TEST("Recharge moves don't timeout when all battlers are recharging")
 {
-<<<<<<< HEAD
-
-=======
->>>>>>> be8224a0ff8e85ca6454db27fde5425ec46b3f22
     GIVEN {
         PLAYER(SPECIES_WOBBUFFET) { }
         OPPONENT(SPECIES_WOBBUFFET) { }

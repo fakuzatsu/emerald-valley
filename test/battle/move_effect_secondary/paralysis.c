@@ -27,11 +27,7 @@ SINGLE_BATTLE_TEST("Thunder Shock cannot paralyze an Electric-type (Gen6+)")
     PARAMETRIZE { gen = GEN_5; }
     PARAMETRIZE { gen = GEN_6; }
     GIVEN {
-<<<<<<< HEAD
-        WITH_CONFIG(GEN_CONFIG_PARALYZE_ELECTRIC, gen);
-=======
         WITH_CONFIG(CONFIG_PARALYZE_ELECTRIC, gen);
->>>>>>> be8224a0ff8e85ca6454db27fde5425ec46b3f22
         ASSUME(GetSpeciesType(SPECIES_PIKACHU, 0) == TYPE_ELECTRIC);
         PLAYER(SPECIES_WOBBUFFET);
         OPPONENT(SPECIES_PIKACHU);
